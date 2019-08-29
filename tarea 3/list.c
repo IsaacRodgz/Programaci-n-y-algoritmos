@@ -1,10 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
+#define TRUE 1
+#define FALSE 0
 
 struct myStruct
 {
     char *b;
-    char a; 
+    char a;
     char c;
 };
 
@@ -39,7 +41,7 @@ void problema2(){
 
     b = 5.0;
 
-/* 
+/*
     Se inicializa el apuntador ptr_a para que haga referencia al valor de la variable a, a través de su dirección de memoria
     (obtenida con el operador &)
 
@@ -49,9 +51,9 @@ void problema2(){
 */
     ptr_a = &a;
 
-/* 
+/*
     Se inicializa el doble apuntador dptr_a para que haga referencia al valor del apuntador ptr_a, a través de su dirección de memoria
-    
+
     >> dptr_a -> ptr_b
     >> dptr_a = "dirección de memoria de ptr_b"
     >> ptr_b -> "basura"
@@ -60,18 +62,18 @@ void problema2(){
 
 /*
     Se inicializa el doble apuntador dptr_b, con el contenido de dptr_a, que es la dirección de memoria del apuntador ptr_b
-    
+
     >> dptr_b = "contenido de dptr_a" = "dirección de memoria de ptr_b"
     >> dptr_a -> ptr_b
     >> dptr_a = "dirección de memoria de ptr_b"
-*/    
+*/
     dptr_b = dptr_a;
 
-/*    
+/*
     Se "desreferencia" el doble apuntador dptr_b, para que en la dirección a la que apunta guarde el valor de ptr_a. Y como dptr_b
     hace referencia al apuntador ptr_b, ahora ptr_b guardará la dirección a la que hace referencia ptr_a, es decir ptr_b hará
     referencia a la variable a
-    
+
     >> ptr_b = "contenido de ptr_a" = "Dirección de memoria de a"
     >> ptr_b -> a
     >> ptr_a -> a
@@ -80,7 +82,7 @@ void problema2(){
 */
     *dptr_b = ptr_a;
 
-/*    
+/*
     Se "desreferencia" el doble apuntador dptr_a 2 veces, como dptr_a hace referencia al apuntador ptr_b, se obtiene la dirección
     de memoria que guarda ptr_b, y como ptr_b hace referencia a la variable "a", con el segundo operador de "desreferencia",
     se accede a la dirección de memoria de "a" y ahí se guarda el valor de -3.0
@@ -188,7 +190,7 @@ list* addElement(int element, list* prev){
     return newNode;
 }
 
-void print(list * l){
+void print(list* l){
 
     list nodeIterate;
     nodeIterate = *l;
@@ -202,12 +204,66 @@ void print(list * l){
         nodeIterate = *nodeIterate.next;
     }
     printf("%d", nodeIterate.value);
-    
+
     printf("\n\n");
 }
 
+void liberate(list* l){
+
+    list* curr;
+
+    while ( (curr = l) != NULL ) {
+        l = l->next;
+        free (curr);
+    }
+}
+
+int getKthValue(int k, list* l){
+
+    list nodeIterate = *l;
+    int kCurrent = 1;
+
+    while ( nodeIterate.next != NULL ) {
+
+        if( k == kCurrent )
+            return nodeIterate.value;
+        nodeIterate = *nodeIterate.next;
+        kCurrent++;
+    }
+
+    if( k == kCurrent )
+        return nodeIterate.value;
+    else{
+        fprintf(stderr, "[Error]: List index out of bounds\n\n");
+        exit(-1);
+    }
+}
+
+int isEqual(list* la, list* lb){
+
+    list iterA = *la;
+    list iterB = *lb;
+
+    while ( iterA.next != NULL && iterB.next != NULL ) {
+
+        if ( iterA.value != iterB.value )
+            return FALSE;
+
+        iterA = *iterA.next;
+        iterB = *iterB.next;
+    }
+
+    if ( iterA.value != iterB.value )
+        return FALSE;
+
+    if( (iterA.next != NULL && iterB.next == NULL) || (iterA.next == NULL && iterB.next != NULL) )
+        return FALSE;
+
+    return TRUE;
+}
+
 int main(){
-    
+
     //problema1();
 
     //problema2();
@@ -218,6 +274,7 @@ int main(){
 
     //problema5
 
+    // Create new List
     list *myList = malloc( sizeof(*myList) );
     myList->value = 1;
     myList->next = NULL;
@@ -229,7 +286,22 @@ int main(){
 
     print(myList);
 
+    //int index = 4;
+    //printf("list[%d] = %d\n\n", index, getKthValue(index, myList));
+
+    // Create new List
+    list *myListp = malloc( sizeof(*myListp) );
+    myListp->value = 1;
+    myListp->next = NULL;
+
+    myListp = addElement(2, myListp);
+    myListp = addElement(3, myListp);
+    myListp = addElement(4, myListp);
+    myListp = addElement(5, myListp);
+
+    print(myListp);
+
+    printf("Equal? %s\n\n", isEqual(myList, myListp)==TRUE? "YES" : "NO");
+
     return 0;
 }
-
-
