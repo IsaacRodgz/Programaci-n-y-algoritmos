@@ -1,8 +1,6 @@
 #ifndef _pgm_h
 #define _pgm_h
 
-#include "pgm.h"
-
 typedef struct pgmStruct {
 
     int maxVal;
@@ -13,5 +11,9 @@ typedef struct pgmStruct {
 } pgmImage ;
 
 pgmImage* createPgmImage(int width, int height, int maxVal);
+
+void skipComments(FILE* fp);
+
+pgmImage* openPgmImage(const char* filename);
 
 #endif

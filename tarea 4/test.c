@@ -10,9 +10,9 @@ int main(int argc, char const *argv[]) {
 
     pgmImage* image;
 
-    image = createPgmImage(width, height, maxVal);
+    image = openPgmImage("balloons.ascii.pgm");
 
-    printf("\n%d\n\n", image->data[0][0]);
+    printf("\n%d\n\n", image->data[479][638]);
 
     return 0;
 }
