@@ -14,6 +14,8 @@ pgmImage* createPgmImage(int width, int height, int maxVal);
 
 void skipComments(FILE* fp);
 
-pgmImage* openPgmImage(const char* filename);
+pgmImage* readPgmImage(const char* filename);
+
+void writePgmImage(pgmImage* image, const char* filename);
 
 #endif

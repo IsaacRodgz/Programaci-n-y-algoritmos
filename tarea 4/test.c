@@ -10,9 +10,9 @@ int main(int argc, char const *argv[]) {
 
     pgmImage* image;
 
-    image = openPgmImage("balloons.ascii.pgm");
+    image = readPgmImage("balloons.ascii.pgm");
 
-    printf("\n%d\n\n", image->data[479][638]);
+    writePgmImage(image, "balloonsWrite.ascii.pgm");
 
     return 0;
 }

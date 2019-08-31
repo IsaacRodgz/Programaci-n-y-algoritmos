@@ -102,3 +102,46 @@ pgmImage* readPgmImage(const char* filename){
 
     return image;
 }
+
+void writePgmImage( pgmImage* image, const char* filename ){
+
+    FILE* pgmFile;
+
+    if ( ( pgmFile = fopen(filename, "w") ) == NULL ) {
+
+        fprintf(stderr, "\n[Error]: while trying to create file %s\n\n", filename);
+        exit(-1);
+    }
+
+    int width = image->width;
+    int height = image->height;
+    int maxVal = image->maxVal;
+    int currVal;
+
+    // Write header
+
+    fprintf(pgmFile, "P2\n");
+    fprintf(pgmFile, "# created by 'xv balloons_bw.tif'\n");
+    fprintf(pgmFile, "%d %d\n", width, height);
+    fprintf(pgmFile, "%d\n", maxVal);
+
+    // Write image values
+
+    for(int i = 0; i < width * height; i++){
+
+        currVal = *( image->data[0] + i );
+
+        if( i%17 == 0 && i != 0 )
+            fprintf(pgmFile, "\n");
+
+        if( currVal > 99 )
+            fprintf(pgmFile, "%d ", currVal );
+        else if( currVal > 9 )
+            fprintf(pgmFile, " %d ", currVal );
+        else
+            fprintf(pgmFile, " %d ", currVal );
+
+    }
+
+    fclose(pgmFile);
+}
