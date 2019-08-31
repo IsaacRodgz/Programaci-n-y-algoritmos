@@ -139,7 +139,7 @@ void writePgmImage( pgmImage* image, const char* filename ){
         else if( currVal > 9 )
             fprintf(pgmFile, " %d ", currVal );
         else
-            fprintf(pgmFile, " %d ", currVal );
+            fprintf(pgmFile, "  %d ", currVal );
 
     }
 
