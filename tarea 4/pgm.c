@@ -34,7 +34,7 @@ void skipComments(FILE* fp){
     ungetc(c, fp);
 }
 
-pgmImage* openPgmImage(const char* filename){
+pgmImage* readPgmImage(const char* filename){
 
     FILE* pgmFile;
 
@@ -77,6 +77,7 @@ pgmImage* openPgmImage(const char* filename){
         exit(-1);
     }
 
+    // Initialize structure for reading pgm image
     pgmImage* image = createPgmImage(width, height, maxVal);
 
     int valsRead;
@@ -86,8 +87,9 @@ pgmImage* openPgmImage(const char* filename){
     int j;
     int count = 0;
 
+    // Read pgm image
     while ( ( valsRead = fscanf(pgmFile, "%d", &value) ) != EOF && valsRead == 1) {
-        
+
         i = count/640;
         j = count%640;
 
