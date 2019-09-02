@@ -174,15 +174,32 @@ int ** problema4(int n){
     return coef;
 }
 
-int main(){
+int main(int argc, char const *argv[]) {
 
-    //problema1();
+    if ( argc == 1 ) {
+        printf("\nError: Falta argumento -option\n\n");
+    }
+    else{
 
-    //problema2();
+        switch ( atoi(argv[1]) ) {
 
-    //problema3();
+            case 1:
+                problema1();
+                break;
 
-    //problema4(7);
+            case 2:
+                problema2();
+                break;
+
+            case 3:
+                problema3();
+                break;
+
+            case 4:
+                problema4(7);
+                break;
+        }
+    }
 
     return 0;
 }
