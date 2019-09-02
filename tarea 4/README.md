@@ -2,6 +2,7 @@
 
 Solución a problemas de tarea 4.
 
+*  C structure to handle pgm images
 * Función para crear estructura que pueda manejar imágenes en formato pgm
 * Función para leer imágen pgm desde un archivo .pgm a memoria en la estructura definida
 * Función para escribir imágen desde memoria hacia un archivo .pgm
