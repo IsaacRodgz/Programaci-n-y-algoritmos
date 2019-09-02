@@ -1,4 +1,4 @@
-## Tarea 4
+# Tarea 4
 
 Solución a problemas de tarea 4.
 
@@ -6,13 +6,13 @@ Solución a problemas de tarea 4.
 * Función para leer imágen pgm desde un archivo .pgm a memoria en la estructura definida
 * Función para escribir imágen desde memoria hacia un archivo .pgm
 
-# Ejecución
+## Ejecución
 
 * make
 * ./runTest rutaImagen
 * make clean
 
-# Salida
+## Salida
 
 * Imprime por consola los parámetros "width height maxValue" leidos de la imagen
 * Crea copia de la imagen leida con el nombre "copyImage.pgm"
