@@ -17,14 +17,20 @@ int read(int n, int W, char words[n][W], const char* file_name){
     int symbol_count = 0;
     char w[W];
 
+    // Read n words
+
     while ( word_count < n ) {
+
+        // Read word and check if char is in [a-z][A-Z] range or if it's a latin symbol from ISO-8859-1
 
         while ( (c = fgetc(file_text)) != EOF && ( (c > 64 && c < 91) || (c > 96 && c < 123) || c > 191 ) ) {
 
             if(symbol_count < W)
                 w[symbol_count++] = c;
         }
-        //printf("[%d][%d][%d] %s\n", word_count+1, symbol_count, w[0], w);
+
+        // Verify that word has length at most W and the word is not the '\n' character
+
         if ( symbol_count < W-1 && w[0] != 13 && symbol_count > 0 ) {
 
             strcpy(words[word_count], w);
@@ -48,6 +54,8 @@ void swap(char w1[], char w2[], int size){
 
 void sort_words(int n, int W, char words[n][W]){
 
+    // Sort words by bubble sort
+
     for (int i = 0; i < n-1; i++){
 
         for (int j = 0; j < n-i-1; j++){
@@ -61,7 +69,8 @@ void sort_words(int n, int W, char words[n][W]){
 char** unique_words(int n, int W, char words[n][W], int* unique_count){
 
     *unique_count = 0;
-    //char temp = 0;
+
+    // Count how many unique words the array has
 
     for (int i = 0; i < n-1; i++) {
 
@@ -71,10 +80,14 @@ char** unique_words(int n, int W, char words[n][W], int* unique_count){
     }
     (*unique_count)++;
 
+    // Array to save unique words
+
     char** words_dict = malloc( (*unique_count) * sizeof *words_dict );
     for (int i = 0; i < (*unique_count); i++) {
         words_dict[i] = calloc( W, sizeof *words_dict[i] );
     }
+
+    // Add unique words to new array
 
     int k = 0;
     int i = 0;
@@ -90,6 +103,8 @@ char** unique_words(int n, int W, char words[n][W], int* unique_count){
 }
 
 int word_search(int n, int W, char** words, char* w2search){
+
+    // Binary search of word w2search in words sorted array
 
     int k = 0;
     for (int mid = n/2; mid > 0; mid /= 2) {

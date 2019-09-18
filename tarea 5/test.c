@@ -1,54 +1,50 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include "dic.h"
-#define W 100
 
-void test_dict(const char* file_name, int n){
+void test_dict(const char* file_name, int n, int W){
 
+    // Array to store n words of max length W each
     char words[n][W];
 
     if ( read(n, W, words, file_name) != 0 ) {
         printf("\nError while reading file %s\n\n", file_name);
     }
-
-    printf("\n\nWords found:\n\n");
-    for (int i = 0; i < n; i++) {
-        printf("[%d] %s\n", i+1, words[i]);
-    }
-    printf("\n\n");
+    printf("\n%d words parsed successfully from file %s\n", n, file_name);
 
     sort_words(n, W, words);
-
-    printf("Sorted words:\n\n");
-    for (int i = 0; i < n; i++) {
-        printf("[%d] %s\n", i+1, words[i]);
-    }
-    printf("\n\n");
+    printf("\nWords sorted\n");
 
     int unique_count;
     char** words_dict = unique_words(n, W, words, &unique_count);
-
-    printf("Unique words filtered:\n\n");
-    for (int i = 0; i < unique_count; i++) {
-        printf("[%d] %s\n", i+1, words_dict[i]);
-    }
-    printf("\n\n");
+    printf("\n%d unique words filtered\n", unique_count);
 
     char* w2search = "Quijote";
-    printf("%s in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
+    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
+    w2search = "cuchilladas";
+    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
+    w2search = "Mexico";
+    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
+    w2search = "Taco";
+    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
+    w2search = "Sancho";
+    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
 
 }
 
 int main(int argc, char const *argv[]) {
 
     if ( argc == 1 ) {
-        fprintf(stderr, "\nError: Two arguments missing: textFilePath numWords\n\n");
+        fprintf(stderr, "\nError: Three arguments missing: textFilePath numWords wordLength\n\n");
         exit(-1);
     } else if ( argc == 2 ) {
-        fprintf(stderr, "\nError: One argument missing: numWords\n\n");
+        fprintf(stderr, "\nError: Two arguments missing: numWords wordLength\n\n");
+        exit(-1);
+    } else if ( argc == 3 ) {
+        fprintf(stderr, "\nError: One argument missing: wordLength\n\n");
         exit(-1);
     } else
-        test_dict( argv[1], atoi(argv[2]) );
+        test_dict( argv[1], atoi(argv[2]), atoi(argv[3]) );
 
     return 0;
 }
