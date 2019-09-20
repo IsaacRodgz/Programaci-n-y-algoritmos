@@ -27,6 +27,11 @@ void test_dict(const char* file_name, int n, int W){
     //char* w2search = "Quijote";
     //printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
 
+    for (int i = 0; i < unique_count; i++) {
+        free(words_dict[i]);
+    }
+    free(words_dict);
+
 }
 
 int main(int argc, char const *argv[]) {
