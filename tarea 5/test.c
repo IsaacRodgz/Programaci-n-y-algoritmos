@@ -19,16 +19,13 @@ void test_dict(const char* file_name, int n, int W){
     char** words_dict = unique_words(n, W, words, &unique_count);
     printf("\n%d unique words filtered\n", unique_count);
 
-    char* w2search = "Quijote";
-    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
-    w2search = "cuchilladas";
-    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
-    w2search = "Mexico";
-    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
-    w2search = "Taco";
-    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
-    w2search = "Sancho";
-    printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
+    printf("\n");
+    for (int i = 0; i < unique_count; i++) {
+        printf("%s\n", words_dict[i]);
+    }
+
+    //char* w2search = "Quijote";
+    //printf("\n[%s] in dictionary? %s\n\n", w2search, (word_search(unique_count, W, words_dict, w2search) == 1 )? "Yes" : "No" );
 
 }
 

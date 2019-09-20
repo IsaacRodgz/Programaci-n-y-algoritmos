@@ -25,8 +25,27 @@ int read(int n, int W, char words[n][W], const char* file_name){
 
         while ( (c = fgetc(file_text)) != EOF && ( (c > 64 && c < 91) || (c > 96 && c < 123) || c > 191 ) ) {
 
-            if(symbol_count < W)
+            if(symbol_count < W){
+
+                if (c > 64 && c < 91) // Mayuscula a minuscula
+                    c += 32;
+                else if( c == 233 || c == 237 || c == 243 ) // e, i, o sin acento
+                    c -= 132;
+                else if( c == 225 ) // a sin acento
+                    c -= 128;
+                else if( c == 250 ) // u sin acento
+                    c -= 133;
+                else if( c == 241 ) // ñ -> n
+                    c -= 131;
+                else if( c == 193 ) // A sin acento
+                    c -= 96;
+                else if( c == 201 || c == 205 || c == 211 ) // E, I, O sin acento minuscula
+                    c -= 100;
+                else if( c == 218 ) // U sin acento
+                    c -= 101;
+
                 w[symbol_count++] = c;
+            }
         }
 
         // Verify that word has length at most W and the word is not the '\n' character
