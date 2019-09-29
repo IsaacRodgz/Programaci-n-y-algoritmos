@@ -1,18 +1,21 @@
-# Tarea 5
+# Tarea 6
 
-Read numWords words of max length wordLength each. If word is longer than wordLength, it's ignored.
-The words are then sorted by Bubble sort and filter repeated words.
-Test search function with 5 different words.
+* Implementation of queue with two stacks
+* Implementation of priority queue with ternary heap
 
 ## Ejecución
 
 * make
-* ./runTest textFilePath numWords wordLength
+* ./runTest testOption
 * make clean
 
 ## Example
 
->> ./runTest donq.txt 20000 13
+Queue test
+>> make && ./runTest 1
+
+Priority queue test
+>> make && ./runTest 2
 
 ## Compilado con
 

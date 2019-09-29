@@ -14,8 +14,7 @@ void test_queue(){
     enqueue(q, 4);
     enqueue(q, 5);
 
-    printf("\n");
-    printf("Initial size: %d\n", sizeQ(q));
+    printf("\nInitial size: %d\n", sizeQ(q));
 
     printf("\nDequeue: %d\n", dequeue(q));
     printf("Size: %d\n", sizeQ(q));
@@ -45,13 +44,15 @@ void test_queue(){
 
     printf("\n\nDequeue: %d\n", dequeue(q));
     printf("Size: %d\n", sizeQ(q));
+
+    printf("\n%s\n", isEmptyQ(q)? "Queue is empty" : "Queue is not empty");
 }
 
 void test_heap(){
 
     tHeap* h = createTHeap(10);
 
-    printf("\nInsert elements in ternary heap:\n\n");
+    printf("\nInsert elements in priority queue:\n\n");
     insert(h, 15);
     insert(h, 10);
     insert(h, 5);
@@ -71,13 +72,13 @@ void test_heap(){
     printHeap(h);
     printf("\n");
 
-    printf("Remove max: ");
+    printf("Remove max from priority queue: ");
     int maxVal = removeMax(h);
     printf("%d\n\n", maxVal);
     printHeap(h);
     printf("\n");
 
-    printf("Remove max: ");
+    printf("Remove max priority queue: ");
     maxVal = removeMax(h);
     printf("%d\n\n", maxVal);
     printHeap(h);
@@ -86,7 +87,13 @@ void test_heap(){
 
 int main(int argc, char const *argv[]) {
 
-    test_queue();
+    if( argc == 1 )
+        printf("Error: One argument missing: [1|2]\n");
+
+    if ( atoi(argv[1]) == 1 )
+        test_queue();
+    else
+        test_heap();
 
     return 0;
 }
