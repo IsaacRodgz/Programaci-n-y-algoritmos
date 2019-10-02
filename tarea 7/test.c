@@ -18,7 +18,7 @@ void test_rbtree(){
     insert(&r, 4);
 
     printf("\n");
-    //print_ascii_tree(r);
+    print_ascii_tree(r);
 /*
     printf("\n--------------------------------------------------------\n");
     printf("Rotate %d to left:\n\n", r->left->data);

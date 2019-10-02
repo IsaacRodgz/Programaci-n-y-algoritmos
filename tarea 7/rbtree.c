@@ -117,7 +117,7 @@ void insertFixUp(Node** r, Node* x){
 
             // Case 2: grandparent -> left == parent AND parent->right == x
 
-            if ( x->parent->parent->left == x->parent && x->parent->right == x ) {
+            else if ( x->parent->parent->left == x->parent && x->parent->right == x ) {
 
                 // swap colors of x and grandparent
 
@@ -131,12 +131,12 @@ void insertFixUp(Node** r, Node* x){
 
                 // rotate x right
 
-                rotateRight(r, x->parent->parent);
+                rotateRight(r, x->parent);
             }
 
             // Case 3: grandparent -> right == parent AND parent->left == x
 
-            if ( x->parent->parent->right == x->parent && x->parent->left == x ) {
+            else if ( x->parent->parent->right == x->parent && x->parent->left == x ) {
 
                 // swap colors of x and grandparent
 
@@ -150,12 +150,12 @@ void insertFixUp(Node** r, Node* x){
 
                 // rotate x right
 
-                rotateLeft(r, x->parent->parent);
+                rotateLeft(r, x->parent);
             }
 
             // Case 1: grandparent -> left == parent AND parent->left == x
 
-            if ( x->parent->parent->right == x->parent && x->parent->right == x ) {
+            else if ( x->parent->parent->right == x->parent && x->parent->right == x ) {
 
                 // swap colors of parent and grandparent
 
@@ -168,7 +168,6 @@ void insertFixUp(Node** r, Node* x){
                 rotateLeft(r, x->parent->parent);
             }
         }
-
     }
 
     (*r)->color = BLACK;
