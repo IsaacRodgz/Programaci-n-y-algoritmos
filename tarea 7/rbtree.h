@@ -4,11 +4,15 @@
 
 typedef struct StructNode{
 
-    int key;
+    int data;
     int color;
-    Node *left, *right, *parent;
+    struct StructNode *left, *right, *parent;
 
 } Node;
+
+void rotateLeft(Node** r, Node* x);
+
+void rotateRight(Node** r, Node* x);
 
 void insertFixUp(Node** r, Node* x);
 
