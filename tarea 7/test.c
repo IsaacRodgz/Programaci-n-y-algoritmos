@@ -19,19 +19,17 @@ void test_rbtree(){
 
     printf("\n");
     print_ascii_tree(r);
-/*
-    printf("\n--------------------------------------------------------\n");
-    printf("Rotate %d to left:\n\n", r->left->data);
-    rotateLeft(&r, r->left);
-    print_ascii_tree(r);
     printf("\n");
 
-    printf("\n--------------------------------------------------------\n");
-    printf("Rotate %d to right:\n\n", r->data);
-    rotateRight(&r, r);
-    print_ascii_tree(r);
-    printf("\n");
-*/
+    int n = 4;
+    printf("%d in red-balck tree? %s\n", n, searchKey(r, n) ? "Yes" : "No" );
+
+    n = 14;
+    printf("\n%d in red-balck tree? %s\n", n, searchKey(r, n) ? "Yes" : "No" );
+
+    n = 16;
+    printf("\n%d in red-balck tree? %s\n\n", n, searchKey(r, n) ? "Yes" : "No" );
+
 }
 
 int main(int argc, char const *argv[]) {
