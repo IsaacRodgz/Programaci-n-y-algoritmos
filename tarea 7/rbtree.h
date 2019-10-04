@@ -18,4 +18,6 @@ void insertFixUp(Node** r, Node* x);
 
 void insert(Node** root, int val);
 
+int searchKey(Node* r, int val);
+
 #endif

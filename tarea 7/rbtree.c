@@ -153,7 +153,7 @@ void insertFixUp(Node** r, Node* x){
                 rotateLeft(r, x->parent);
             }
 
-            // Case 1: grandparent -> left == parent AND parent->left == x
+            // Case 4: grandparent -> left == parent AND parent->left == x
 
             else if ( x->parent->parent->right == x->parent && x->parent->right == x ) {
 
@@ -214,4 +214,25 @@ void insert(Node** root, int val){
 
     insertFixUp(root, x);
 
+}
+
+int searchKey(Node* r, int val){
+
+    Node* temp = r;
+
+    while ( temp != NULL ) {
+
+        if ( val == temp->data )
+            return 1;
+
+        else if ( val < temp->data )
+            temp = temp->left;
+
+        else
+            temp = temp->right;
+    }
+
+    // key not found
+
+    return 0;
 }
