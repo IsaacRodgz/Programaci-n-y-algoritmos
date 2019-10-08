@@ -30,7 +30,7 @@ void test_graph(const char* file_name){
 
     for (int i = 1; i <= max; i++) {
 
-        printf("\nVertices of strongly connected components %d:\n\n", i);
+        printf("\nVertices of strongly connected component %d:\n\n", i);
 
         for (int j = 0; j < G->num_vertex; j++) {
 
