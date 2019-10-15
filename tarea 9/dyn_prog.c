@@ -93,9 +93,10 @@ void knapsack( const char* file_name ){
         print(current, W+1);
         printf("\n");
 
-        swap( &prev, &current );
+        if(i < N-1)
+            swap( &prev, &current );
     }
 
-    printf("\nMax weight: %d\n\n", prev[W]);
+    printf("\nMax weight: %d\n\n", current[W]);
 
 }
