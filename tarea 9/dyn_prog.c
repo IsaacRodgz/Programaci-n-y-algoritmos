@@ -50,7 +50,7 @@ void knapsack( const char* file_name ){
 
 void max_palindrom( const char* file_name ){
 
-    char* word = "programarenc";
+    char* word = "programarencradar";
 
     int len = strlen(word);
 
@@ -86,35 +86,53 @@ void max_palindrom( const char* file_name ){
             // string has not been verified yet
 
             else {
-                palin[i][j] = -1;
+                palin[i][j] = 0;
             }
         }
     }
 
     // Compute remaining cases
 
+    int pad = 2;
+
+    for (int i = 0; i < len-1; i++) {
+
+        for (int j = 0; j < len-1-i; j++) {
+
+            palin[j][j+pad] = palin[j+1][j+pad-1] == 1 && word[j] == word[j+pad];
+        }
+
+        pad+=1;
+    }
+
+    // Read from matrix the maximum lenght palindroms found
+
+    pad = len-1;
+    int found = 0;
+
     for (int i = 0; i < len; i++) {
 
-        for (int j = 0; j < len; j++) {
+        for (int j = 0; j < i+1; j++) {
 
-            if ( palin[i][j] == -1 && i < j) {
+            if ( palin[j][j+pad] == 1 ) {
 
-                if ( palin[i+1][j-1] == 1 && word[i] == word[j] ) {
-                    palin[i][j] = 1;
+                //printf("\nMax length of palindrom found is %d.\nWith the following substrings:\n\n", pad+1);
+
+                printf("\n");
+                for (int k = j; k < j+pad+1; k++) {
+                    printf("%c", word[k]);
                 }
-                else{
-                    palin[i][j] = 0;
-                }
+
+                found = 1;
             }
         }
+
+        if ( found == 1 )
+            break;
+
+        pad-=1;
     }
 
-    for (int i = 0; i < len; i++) {
-        for (int j = 0; j < len; j++) {
-            printf("%2d ", palin[i][j]);
-        }
-        printf("\n");
-    }
     printf("\n\n");
 }
 
