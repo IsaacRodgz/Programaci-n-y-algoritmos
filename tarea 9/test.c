@@ -2,9 +2,19 @@
 #include<stdio.h>
 #include "dyn_prog.h"
 
+void test_winning_prob(const char* file_name){
+
+    double prob = winning_prob(3, 2, 10);
+
+    printf("\nProbability of pumas winning n matches: %lf\n\n", prob);
+
+}
+
 void test_palindrom(const char* file_name){
 
-    max_palindrom(file_name);
+    int max_len_palindrom = max_palindrom_hard(file_name);
+
+    printf("\nMaximum lenght subsequence palindrom found : %d\n\n", max_len_palindrom);
 
 }
 
@@ -20,7 +30,7 @@ int main(int argc, char const *argv[]) {
         printf("Error: Missing parameter: file_name\n");
 
     else
-        test_palindrom(argv[1]);
+        test_winning_prob(argv[1]);
 
     return 0;
 }
