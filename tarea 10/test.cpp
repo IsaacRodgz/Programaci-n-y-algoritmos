@@ -5,7 +5,7 @@ using namespace std;
 
 void test_bayes(){
 
-    parse_words("email_dataset_clean.txt");
+    cout << "\n" << (predict("email.txt", "spam.txt", "rogelio") ? "Spam" : "Not spam") << "\n";
 }
 
 int main(int argc, char const *argv[]) {
