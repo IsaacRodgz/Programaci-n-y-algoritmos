@@ -44,7 +44,7 @@ void knapsack( const char* file_name ){
             swap( &prev, &current );
     }
 
-    printf("\nMax weight: %d\n\n", current[W]);
+    printf("\nMax value/cost: %d\n\n", current[W]);
 
 }
 
@@ -135,8 +135,6 @@ double winning_prob( int p, int a, int n ){
 
         for (int i = iter; i >= a; i--) {
 
-            printf("[%d][%d]\n", iter, i);
-
             if( i == iter )
                 probs[iter][i] = 0.5;
             else
@@ -147,14 +145,6 @@ double winning_prob( int p, int a, int n ){
 
             probs[j][iter] = 0.5 * probs[j+1][iter] + 0.5 * probs[j][iter+1];
         }
-    }
-
-    printf("\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            printf("%6lf ", probs[i][j]);
-        }
-        printf("\n");
     }
 
     return probs[p][a];

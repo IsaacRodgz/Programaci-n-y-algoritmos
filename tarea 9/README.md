@@ -1,34 +1,53 @@
-# Tarea 8
+# Tarea 9. Programación dinámica
 
-* Program that finds strongly connected components of a directed graph.
-* Reads file of directed graph where first contains number of vertices and number of edges
- respectively, separated by space. The next lines define the edges of the graph, one edge per line.
- If there is an edge from vertex a to b, the line will have elements "a b".
- * Vertices are identified from 0 to n-1, where n is the total number of vertices of the graph.
+* Knapsack
+* Máxima subsecuencia palíndromo
+* Probabilidad ganar serie
 
 ## Ejecución
 
-* make
-* ./runTest graph.txt
+* make && ./runTest option [data]
+
+### Knapsack
+
+> make && ./runTest 1 filename
+
+Ejemplo
+
+* make && ./runTest 1 data.txt
 * make clean
 
-## Output
+### Palindromo
 
-* Array strly_conn_comp_index of size n-1 where the index represents the vertex number.
-* For vertex i, strly_conn_comp_index[i] indicates the strongly connected component it belongs to.
-* Strongly connected components are tagged from 1 to k, where k is the total number of strongly
-connected components of the graph.
+> make && ./runTest 2 string
 
-## Example
+Ejemplo
 
-> make && ./runTest graph.txt
+* make && ./runTest 2 acbbxyzcaw
+* make clean
 
-> strly_conn_comp_index = { 3, 3, 3, 4, 4, 4, 1, 1, 1, 1, 2 }
+### Probabilidad gana pumas
 
-* Vertices 0 to 2 belong to strongly connected component "3"
-* Vertices 3 to 5 belong to strongly connected component "4"
-* Vertices 6 to 9 belong to strongly connected component "1"
-* Vertex 10 belongs to strongly connected component "2"
+> make && ./runTest 3 count_pumas count_america total_games
+
+Ejemplo
+
+* make && ./runTest 3 3 2 10
+* make clean
+
+## Análisis complejidad palíndormo
+
+* Tiempo
+
+Debido a que el programa se realizó de manera iterativa y se iteran las subsecuenias de palabras mediante un doble ciclo for, la complejidad del algoritmo será de O(n^2). Para el ciclo exterior se iteran las subsecuencias de longitud k, con k desde 2 hasta n, donde n es la longitud de la cadena original. Para el ciclo for interno se iteran las subsecuencias de longitud k que empiezan en indice i y terminan en indice i + k - 1, con i desde 0 hasta len-k+1.
+
+Como en general se tienen n-k+1 subcadenas de tamaño k, En total se iterarán:
+
+Sum{k = 2, ..., n}(n-k+1) = n*Sum{k = 2, ..., n}(1) + Sum{k = 2, ..., n}(k) + Sum{k = 2, ..., n}(1) = n*(n-1) + (n*(n+1)-2)/2 + (n-1). Lo cual es de orden O(n^2)
+
+* Espacio
+
+Respecto al espacio debido a que se reserva memoria para una matriz cuadrada de n*n, la complejidad en espacio será de orden O(n^2).
 
 ## Compilado con
 
