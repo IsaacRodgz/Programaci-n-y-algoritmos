@@ -5,7 +5,9 @@ using namespace std;
 
 void test_cconexo(const string image_file_name){
 
-    cout << "\n" << num_comp_conexas(image_file_name) << endl;
+    int comp = num_comp_conexas(image_file_name);
+
+    cout << "\nSe encontraron " << comp << " componentes conexas\n" << endl;
 }
 
 int main(int argc, char const *argv[]) {
