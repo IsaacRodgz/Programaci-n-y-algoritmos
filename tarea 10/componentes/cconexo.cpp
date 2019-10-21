@@ -120,7 +120,7 @@ void bfs(vector< vector<bool> > &visited, vector< vector < tuple<int, int> > > &
         int y_pos = y.front();
         y.pop_front();
 
-        visited[x_pos][y_pos] = true;
+        //visited[x_pos][y_pos] = true;
 
         // Add element to component
 
@@ -133,17 +133,20 @@ void bfs(vector< vector<bool> > &visited, vector< vector < tuple<int, int> > > &
             int x_new = x_pos+x_neighbours[i];
             int y_new = y_pos+y_neighbours[i];
 
-            if ( !visited[x_new][y_new] ) {
+            if ( x_new >= 0 && x_new < cols && y_new >= 0 && y_new < rows){
 
-                visited[x_new][y_new] = true;
+                if ( !visited[x_new][y_new] ) {
 
-                // Validate limits of neighbour and pixel is not black
+                    visited[x_new][y_new] = true;
 
-                if ( x_new >= 0 && x_new < cols && y_new >= 0 && y_new < rows  &&  pgm_image[x_new][y_new] > 0 ) {
+                    // Validate limits of neighbour and pixel is not black
 
-                    //cout << "Visit: " << x_new << ", " << y_new << "\n" << endl;
-                    x.push_back(x_new);
-                    y.push_back(y_new);
+                    if ( pgm_image[x_new][y_new] > 0 ) {
+
+                        //cout << "Visit: " << x_new << ", " << y_new << "\n" << endl;
+                        x.push_back(x_new);
+                        y.push_back(y_new);
+                    }
                 }
             }
         }
