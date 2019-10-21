@@ -3,9 +3,14 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
-std::unordered_map< std::string, int > parse_words(const std::string file_name, int& num_msgs, int& num_words);
+std::vector<std::string> read_data(const std::string dataset_file, int class_flag);
 
-bool predict(const std::string email_file, const std::string spam_file, const std::string test_msg);
+std::unordered_map< std::string, int > parse_words(std::vector<std::string> emails, int& num_msgs, int& num_words);
+
+bool predict(const std::string dataset_file, const std::string email);
+
+void eval( const std::string dataset_file );
 
 #endif
