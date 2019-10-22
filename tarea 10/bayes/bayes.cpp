@@ -7,7 +7,7 @@ using namespace std;
 
 vector<string> read_data(const string dataset_file, int class_flag){
 
-    //
+    // Extract spam or not spam emails according to class_flag
 
     string class_pred;
 
@@ -123,8 +123,6 @@ bool predict( const string dataset_file, const string email ){
 
     // Remove words not contained in both tables
 
-    // TODO: Update email_num_words and spam_num_words after intersection
-
     for (auto it = email_freq.begin(); it != email_freq.end();) {
 
         if ( spam_freq.find(it->first) == spam_freq.end() )
@@ -239,8 +237,6 @@ void eval( const string dataset_file ){
 
     // Remove words not contained in both tables
 
-    // TODO: Update email_num_words and spam_num_words after intersection
-
     for (auto it = email_freq.begin(); it != email_freq.end();) {
 
         if ( spam_freq.find(it->first) == spam_freq.end() )
@@ -268,6 +264,9 @@ void eval( const string dataset_file ){
     // Calculate probabilities
 
     double accuracy = 0;
+    double FP = 0;
+    double FN = 0;
+    double TP = 0;
 
     for (int i = 0; i < int(test_data.size()); i++) {
 
@@ -298,11 +297,23 @@ void eval( const string dataset_file ){
                 spam_prob *= (1.0 / vocab_size);
         }
 
-        if ( ( pred[i] == 1 && spam_prob > email_prob ) || ( pred[i] == 0 && spam_prob <= email_prob ) ) {
+        if ( pred[i] == 1 && spam_prob > email_prob ) {
             accuracy += 1;
+            TP += 1;
+        }
+        if ( pred[i] == 0 && spam_prob <= email_prob ) {
+            accuracy += 1;
+        }
+        if ( pred[i] == 1 && spam_prob < email_prob ) {
+            FN += 1;
+        }
+        if ( pred[i] == 0 && spam_prob > email_prob ) {
+            FP += 1;
         }
     }
 
     cout << "\nAccuracy of Naive Bayes predictor of: " << accuracy/(static_cast<double>(test_data.size())) << "\n" << endl;
+    cout << "\nPrecision of Naive Bayes predictor of: " << TP/(TP+FP) << "\n" << endl;
+    cout << "\nRecall of Naive Bayes predictor of: " << TP/(TP+FN) << "\n" << endl;
 
 }
