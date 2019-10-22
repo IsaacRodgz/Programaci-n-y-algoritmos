@@ -176,7 +176,10 @@ bool predict( const string dataset_file, const string email ){
             spam_prob *= (1.0 / vocab_size);
     }
 
-    cout << "\nEmail prob: " << email_prob << "\nSpam prob: " << spam_prob << "\n\n";
+    if(spam_prob > email_prob)
+        cout << "\nSpam\n\n";
+    else
+        cout << "\nNot spam\n\n";
 
     return spam_prob > email_prob;
 }

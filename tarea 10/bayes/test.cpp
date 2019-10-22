@@ -17,11 +17,11 @@ int main(int argc, char const *argv[]) {
     }
 
     else if ( argc == 2 ) {
-        cout << "\nError: Falta argumento: email" << endl;
+        eval(argv[1]);
     }
 
     else{
-        test_bayes(argv[1], argv[2]);
+        predict(argv[1], argv[2]);
     }
 
     return 0;
