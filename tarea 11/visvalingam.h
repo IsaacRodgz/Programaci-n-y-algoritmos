@@ -2,23 +2,21 @@
 #define VISVALINGAM_H
 
 #include <bits/stdc++.h>
+using namespace std;
 
 struct Point {
 
-    double x;
-    double y;
     double area;
-    Point* left;
-    Point* right;
     int index;
+    int left;
+    int right;
 
-    Point(double xp, double yp, int indexp) {
-        x = xp;
-        y = yp;
-        area = 0;
-        left = NULL;
-        right = NULL;
+    Point(double areap, int indexp, int leftp, int rightp) {
+
+        area = areap;
         index = indexp;
+        left = leftp;
+        right = rightp;
     }
 };
 
@@ -29,8 +27,8 @@ struct CompareArea {
     }
 };
 
-double line_lenght(Point p1, Point p2);
+double line_lenght(tuple<double, double> x, tuple<double, double> y);
 
-double triangle_area(Point p);
+double triangle_area( tuple<double, double> x, tuple<double, double> y, tuple<double, double> z );
 
 #endif

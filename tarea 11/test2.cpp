@@ -4,6 +4,11 @@
 
 using namespace std;
 
+void print_point(Point p) {
+    cout << "Index: " << p.index << endl;
+    cout << "Area: " << p.area << "\n" << endl;
+}
+
 void test_visvalingam(){
     /*
     vector< tuple<double, double> > data = { tuple<double, double>(1, 1), tuple<double, double>(3, 2),
@@ -20,98 +25,97 @@ void test_visvalingam(){
 
     for (int i = 0; i < data.size(); i++) {
 
-        Point p( get<0>(data[i]), get<1>(data[i]), i );
+        int left = ( i == 0 ? -1 : i -1 );
+        int right = ( i == data.size()-1 ? -1 : i + 1 );
 
-        lineString.push_back(p);
+        double area = 0.0;
+
+        if( left == -1 or right == -1 )
+            area = 65535.0;
+        else
+            area = triangle_area( data[left], data[i], data[right] );
+
+        lineString.push_back( Point(area, i, left, right) );
     }
 
     // Register areas in priority queues
 
-    vector<Point> areas_vq;
-    vector<double> areas;
+    vector<Point> points_queue;
     vector<int> deleted;
 
-    // Connect points and calculate areas
+    // Initialize queue with all points and deleted with zero (no point has been deleted)
 
     for (int i = 0; i < lineString.size(); i++) {
 
         deleted.push_back(0);
-
-        if ( i == 0 ){
-
-            lineString[i].right = &lineString[i+1];
-            areas.push_back(0.0);
-        }
-
-        else if( i == lineString.size() - 1 ){
-
-            lineString[i].left = &lineString[i-1];
-            areas.push_back(0.0);
-        }
-        else {
-
-            lineString[i].left = &lineString[i-1];
-            lineString[i].right = &lineString[i+1];
-
-            lineString[i].area = triangle_area(lineString[i]);
-            areas.push_back(lineString[i].area);
-            areas_vq.push_back(lineString[i]);
-        }
+        points_queue.push_back(lineString[i]);
     }
 
-    make_heap(areas_vq.begin(), areas_vq.end(), CompareArea());
+    //for_each( points_queue.begin(), points_queue.end(), print_point );
 
-    double epsilon = 1.6;
+    make_heap(points_queue.begin(), points_queue.end(), CompareArea());
 
-    while ( !areas_vq.empty() && areas_vq.front().area < epsilon ) {
+    //for_each( points_queue.begin(), points_queue.end(), print_point );
 
-        Point pv = areas_vq.front();
-        pop_heap(areas_vq.begin(), areas_vq.end(), CompareArea());
-        areas_vq.pop_back();
-        //cout << "\nCurr point: " << "x: " << pv.x << ", y: " << pv.y << endl;
-        //cout << "Area curr point: " << pv.area << "\n" << endl;
+    double epsilon = 1.0;
 
-        deleted[pv.index] = 1;
+    while ( !points_queue.empty() && points_queue.front().area < epsilon ) {
 
-        if( pv.left->left != NULL ){
-            double area_left = triangle_area(*pv.left);
-            areas[pv.left->index] = area_left;
+        cout << "Status before:" << endl;
+        for_each( points_queue.begin(), points_queue.end(), print_point );
+        cout << "--------------------------------------\n";
+
+        Point p = points_queue.front();
+        pop_heap(points_queue.begin(), points_queue.end(), CompareArea());
+        points_queue.pop_back();
+
+        Point left_point = lineString[p.left];
+        Point right_point = lineString[p.right];
+
+        left_point.right = right_point.index;
+        right_point.left = left_point.index;
+
+        if ( left_point.left != -1 and left_point.right != -1 ) {
+            left_point.area = triangle_area( data[left_point.left], data[left_point.index], data[left_point.right] );
         }
 
-        if( pv.right->right != NULL ){
-            double area_right = triangle_area(*pv.right);
-            areas[pv.right->index] = area_right;
+        if ( right_point.left != -1 and right_point.right != -1 ) {
+            right_point.area = triangle_area( data[right_point.left], data[right_point.index], data[right_point.right] );
         }
 
-        make_heap(areas_vq.begin(), areas_vq.end(), CompareArea());
+        for (int i = 0; i < points_queue.size(); i++) {
+            if ( left_point.index == i ) {
+                points_queue[i] = left_point;
+            }
+            if ( right_point.index == i ) {
+                points_queue[i] = right_point;
+            }
+        }
 
-        cout << "Status:" << endl;
-        for (int i = 0; i < areas_vq.size(); i++) {
-            cout << "Point: " << "x: " << areas_vq[i].x << ", y: " << areas_vq[i].y << endl;
-            cout << "Area: " << areas_vq[i].area << "\n" << endl;
+        make_heap(points_queue.begin(), points_queue.end(), CompareArea());
+
+        deleted[p.index] = 1;
+        /*
+        cout << "Status after:" << endl;
+        for (int i = 0; i < points_queue.size(); i++) {
+            cout << "Index: " << points_queue[i].index << endl;
+            cout << "Area: " << points_queue[i].area << "\n" << endl;
         }
         cout << "--------------------------------------\n";
-        //cout << "\nUpdate right\nCurr point: " << "x: " << pv.right->x << ", y: " << pv.right->y << endl;
-        //cout << "Area curr point: " << pv.right->area << "\n" << endl;
-    }
+        */
 
-    Point p = lineString[0];
+    }
 
     cout << "\nFinal nodes: \n" << endl;
 
-    while( p.right != NULL ) {
+    for (int i = 0; i < data.size(); i++) {
 
-        cout << "\n (" << p.x << ", " << p.y << ")\n" << endl;
-
-        if ( p.left != NULL ) {
-            //cout << "left: " << p.left->x << ", " << p.left->y << endl;
+        if (deleted[i] == 0) {
+            cout << "\n (" << get<0>(data[i]) << ", " << get<1>(data[i]) << ")\n" << endl;
         }
-        //cout << "right: " << p.right->x << ", " << p.right->y << endl;
-
-        p = *p.right;
     }
 
-    cout << "\n (" << p.x << ", " << p.y << ")\n" << endl;
+    cout << "\n" << endl;
 
 }
 
