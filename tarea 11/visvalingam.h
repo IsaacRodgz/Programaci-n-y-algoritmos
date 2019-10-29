@@ -21,9 +21,9 @@ struct Point {
 };
 
 struct CompareArea {
-    bool operator()(Point const& p1, Point const& p2) {
+    bool operator()(Point* p1, Point* p2) {
 
-        return p1.area > p2.area;
+        return (*p1).area > (*p2).area;
     }
 };
 

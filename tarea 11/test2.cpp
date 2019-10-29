@@ -10,11 +10,7 @@ void print_point(Point p) {
 }
 
 void test_visvalingam(){
-    /*
-    vector< tuple<double, double> > data = { tuple<double, double>(1, 1), tuple<double, double>(3, 2),
-    tuple<double, double>(4, 3), tuple<double, double>(5, 2), tuple<double, double>(5, 1),
-    tuple<double, double>(7, 0) };
-    */
+
     vector< tuple<double, double> > data = { tuple<double, double>(1, 1), tuple<double, double>(3, 2),
     tuple<double, double>(4, 3), tuple<double, double>(5, 2), tuple<double, double>(5, 1),
     tuple<double, double>(7, 0) };
@@ -40,83 +36,62 @@ void test_visvalingam(){
 
     // Register areas in priority queues
 
-    vector<Point> points_queue;
-    vector<int> deleted;
+    vector<Point*> points_queue;
 
     // Initialize queue with all points and deleted with zero (no point has been deleted)
 
     for (int i = 0; i < lineString.size(); i++) {
 
-        deleted.push_back(0);
-        points_queue.push_back(lineString[i]);
+        points_queue.push_back(&lineString[i]);
     }
-
-    //for_each( points_queue.begin(), points_queue.end(), print_point );
 
     make_heap(points_queue.begin(), points_queue.end(), CompareArea());
 
-    //for_each( points_queue.begin(), points_queue.end(), print_point );
-
     double epsilon = 1.0;
 
-    while ( !points_queue.empty() && points_queue.front().area < epsilon ) {
+    while ( !points_queue.empty() && (*points_queue.front()).area < epsilon ) {
 
-        cout << "Status before:" << endl;
-        for_each( points_queue.begin(), points_queue.end(), print_point );
-        cout << "--------------------------------------\n";
+        //cout << "Status before:" << endl;
+        //for_each( lineString.begin(), lineString.end(), print_point );
+        //cout << "--------------------------------------\n";
 
-        Point p = points_queue.front();
+        Point* p = points_queue.front();
         pop_heap(points_queue.begin(), points_queue.end(), CompareArea());
         points_queue.pop_back();
 
-        Point left_point = lineString[p.left];
-        Point right_point = lineString[p.right];
+        Point* left_point = &lineString[(*p).left];
+        Point* right_point = &lineString[(*p).right];
 
-        left_point.right = right_point.index;
-        right_point.left = left_point.index;
+        (*left_point).right = (*right_point).index;
+        (*right_point).left = (*left_point).index;
 
-        if ( left_point.left != -1 and left_point.right != -1 ) {
-            left_point.area = triangle_area( data[left_point.left], data[left_point.index], data[left_point.right] );
+        if ( (*left_point).left != -1 and (*left_point).right != -1 ) {
+            (*left_point).area = triangle_area( data[(*left_point).left], data[(*left_point).index], data[(*left_point).right] );
         }
 
-        if ( right_point.left != -1 and right_point.right != -1 ) {
-            right_point.area = triangle_area( data[right_point.left], data[right_point.index], data[right_point.right] );
+        if ( (*right_point).left != -1 and (*right_point).right != -1 ) {
+            (*right_point).area = triangle_area( data[(*right_point).left], data[(*right_point).index], data[(*right_point).right] );
         }
 
-        for (int i = 0; i < points_queue.size(); i++) {
-            if ( left_point.index == i ) {
-                points_queue[i] = left_point;
-            }
-            if ( right_point.index == i ) {
-                points_queue[i] = right_point;
-            }
-        }
+        //cout << "Status after deleting node:" << (*p).index << endl;
+        //for_each( lineString.begin(), lineString.end(), print_point );
+        //cout << "--------------------------------------\n";
 
         make_heap(points_queue.begin(), points_queue.end(), CompareArea());
-
-        deleted[p.index] = 1;
-        /*
-        cout << "Status after:" << endl;
-        for (int i = 0; i < points_queue.size(); i++) {
-            cout << "Index: " << points_queue[i].index << endl;
-            cout << "Area: " << points_queue[i].area << "\n" << endl;
-        }
-        cout << "--------------------------------------\n";
-        */
-
     }
 
     cout << "\nFinal nodes: \n" << endl;
 
-    for (int i = 0; i < data.size(); i++) {
+    Point p = lineString[0];
 
-        if (deleted[i] == 0) {
-            cout << "\n (" << get<0>(data[i]) << ", " << get<1>(data[i]) << ")\n" << endl;
-        }
+    while( p.right != -1 ) {
+
+        cout << "\n (" << get<0>(data[p.index]) << ", " << get<1>(data[p.index]) << ")\n" << endl;
+
+        p = lineString[p.right];
     }
 
-    cout << "\n" << endl;
-
+    cout << "\n (" << get<0>(data[p.index]) << ", " << get<1>(data[p.index]) << ")\n" << endl;
 }
 
 int main(int argc, char const *argv[]) {
