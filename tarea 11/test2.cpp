@@ -1,6 +1,7 @@
 #include <iostream>
 #include<bits/stdc++.h>
 #include "visvalingam.h"
+#include "plot.h"
 
 using namespace std;
 
@@ -96,7 +97,9 @@ void test_visvalingam(){
 
 int main(int argc, char const *argv[]) {
 
-    test_visvalingam();
+    //test_visvalingam();
+
+    plot();
 
     return 0;
 }
