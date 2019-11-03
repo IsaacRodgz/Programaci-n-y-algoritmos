@@ -31,4 +31,6 @@ double line_lenght(tuple<double, double> x, tuple<double, double> y);
 
 double triangle_area( tuple<double, double> x, tuple<double, double> y, tuple<double, double> z );
 
+vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > data, double epsilon);
+
 #endif

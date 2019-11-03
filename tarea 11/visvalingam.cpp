@@ -20,3 +20,92 @@ double triangle_area( tuple<double, double> x, tuple<double, double> y, tuple<do
 
     return sqrt(s*(s-a)*(s-b)*(s-c));
 }
+
+vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > data, double epsilon){
+
+    // Create vector of Points
+
+    vector<Point> lineString;
+
+    for (int i = 0; i < data.size(); i++) {
+
+        int left = ( i == 0 ? -1 : i -1 );
+        int right = ( i == data.size()-1 ? -1 : i + 1 );
+
+        double area = 0.0;
+
+        if( left == -1 or right == -1 )
+            area = 65535.0;
+        else
+            area = triangle_area( data[left], data[i], data[right] );
+
+        lineString.push_back( Point(area, i, left, right) );
+    }
+
+    // Register areas in priority queues
+
+    vector<Point*> points_queue;
+
+    // Initialize queue with all points and deleted with zero (no point has been deleted)
+
+    for (int i = 0; i < lineString.size(); i++) {
+
+        points_queue.push_back(&lineString[i]);
+    }
+
+    make_heap(points_queue.begin(), points_queue.end(), CompareArea());
+
+    //cout << "Area: " << (*points_queue.front()).area << endl;
+
+    while ( !points_queue.empty() && (*points_queue.front()).area < epsilon ) {
+
+        //cout << "Status before:" << endl;
+        //for_each( lineString.begin(), lineString.end(), print_point );
+        //cout << "--------------------------------------\n";
+
+        Point* p = points_queue.front();
+        pop_heap(points_queue.begin(), points_queue.end(), CompareArea());
+        points_queue.pop_back();
+
+        Point* left_point = &lineString[(*p).left];
+        Point* right_point = &lineString[(*p).right];
+
+        (*left_point).right = (*right_point).index;
+        (*right_point).left = (*left_point).index;
+
+        if ( (*left_point).left != -1 and (*left_point).right != -1 ) {
+            (*left_point).area = triangle_area( data[(*left_point).left], data[(*left_point).index], data[(*left_point).right] );
+        }
+
+        if ( (*right_point).left != -1 and (*right_point).right != -1 ) {
+            (*right_point).area = triangle_area( data[(*right_point).left], data[(*right_point).index], data[(*right_point).right] );
+        }
+
+        //cout << "Status after deleting node:" << (*p).index << endl;
+        //for_each( lineString.begin(), lineString.end(), print_point );
+        //cout << "--------------------------------------\n";
+
+        make_heap(points_queue.begin(), points_queue.end(), CompareArea());
+    }
+
+    cout << "\nFinal nodes: \n" << endl;
+
+    Point p = lineString[0];
+
+    vector< tuple<double, double> > points;
+
+    while( p.right != -1 ) {
+
+        cout << "\n (" << get<0>(data[p.index]) << ", " << get<1>(data[p.index]) << ")\n" << endl;
+
+        points.push_back(data[p.index]);
+
+        p = lineString[p.right];
+    }
+
+    cout << "\n (" << get<0>(data[p.index]) << ", " << get<1>(data[p.index]) << ")\n" << endl;
+
+    points.push_back(data[p.index]);
+
+    return points;
+}
