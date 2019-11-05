@@ -9,39 +9,6 @@ using namespace std;
 
 void plot(vector< tuple<double, double> > data, vector< tuple<double, double> > simplify_data){
 
-    // Reformat point values to positive
-
-    double x_min = 1<<31-1;
-    double y_min = 1<<31-1;
-    double x_max = -1<<31;
-    double y_max = -1<<31;
-
-    for (size_t i = 0; i < data.size(); i++) {
-
-        if (get<0>(data[i]) < x_min) {
-            x_min = get<0>(data[i]);
-        }
-
-        if (get<1>(data[i]) < y_min) {
-            y_min = get<1>(data[i]);
-        }
-
-        if (get<0>(data[i]) > x_max) {
-            x_max = get<0>(data[i]);
-        }
-
-        if (get<1>(data[i]) > y_max) {
-            y_max = get<1>(data[i]);
-        }
-    }
-
-    for (size_t i = 0; i < data.size(); i++) {
-
-        get<0>(data[i]) -= x_min;
-
-        cout << "x: " << get<0>(data[i]) << ", y: " << get<1>(data[i]) << endl;
-    }
-
     int w = 200;
     int h = 200;
 
@@ -76,19 +43,21 @@ void plot(vector< tuple<double, double> > data, vector< tuple<double, double> > 
 
         cairo_line_to(cr, get<0>(data[i]), get<1>(data[i]));
     }
+    cairo_line_to(cr, get<0>(data[0]), get<1>(data[0]));
     cairo_stroke(cr);
 
     // Draw lines simplified data with green color
-/*
+
     cairo_set_source_rgb(cr, 0, 1, 0);
 
     for (size_t i = 0; i < simplify_data.size(); i++) {
 
         cairo_line_to(cr, get<0>(simplify_data[i]), get<1>(simplify_data[i]));
     }
+    cairo_line_to(cr, get<0>(simplify_data[0]), get<1>(simplify_data[0]));
     cairo_stroke(cr);
-*/
-    cairo_surface_write_to_png(surface, "image.png");
+
+    cairo_surface_write_to_png(surface, "output.png");
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
 }

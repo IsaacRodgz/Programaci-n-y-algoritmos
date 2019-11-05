@@ -88,7 +88,6 @@ vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > da
         make_heap(points_queue.begin(), points_queue.end(), CompareArea());
     }
 
-    cout << "\nFinal nodes: \n" << endl;
 
     Point p = lineString[0];
 
@@ -96,14 +95,10 @@ vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > da
 
     while( p.right != -1 ) {
 
-        cout << "\n (" << get<0>(data[p.index]) << ", " << get<1>(data[p.index]) << ")\n" << endl;
-
         points.push_back(data[p.index]);
 
         p = lineString[p.right];
     }
-
-    cout << "\n (" << get<0>(data[p.index]) << ", " << get<1>(data[p.index]) << ")\n" << endl;
 
     points.push_back(data[p.index]);
 
@@ -126,8 +121,6 @@ vector< tuple<double, double> > read_points(const string points_file){
 
         getline(ss, x, ',');
         getline(ss, y, ',');
-
-        //cout << "x: " << stod(x) << ", y: " << stod(y) << endl;
 
         data.push_back( tuple<double, double>(stod(x), stod(y)) );
     }
