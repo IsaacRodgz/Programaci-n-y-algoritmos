@@ -13,10 +13,6 @@ void print_point(Point p) {
 }
 
 void test_visvalingam(const string points_file, double epsilon){
-/*
-    vector< tuple<double, double> > data = { tuple<double, double>(10, 10), tuple<double, double>(50, 50),
-    tuple<double, double>(90, 25), tuple<double, double>(140, 95) };
-*/
 
     vector< tuple<double, double> > data = read_points(points_file);
 
@@ -24,9 +20,9 @@ void test_visvalingam(const string points_file, double epsilon){
 
     points = simplify_poly(data, epsilon);
 
-    cout << "Umbral de area minima: " << epsilon << endl;
+    cout << "\nUmbral de area minima: " << epsilon << endl;
     cout << "Porcentaje de compresion logrado: " << (1.0 - (static_cast<double>(points.size()+2)/data.size()))*100 << "%" << endl;
-    cout << "Porcentaje de error: " << fabs(1.0 - area_poligon(points)/area_poligon(data))*100 << "%" << endl;
+    cout << "Porcentaje de error: " << fabs(1.0 - area_poligon(points)/area_poligon(data))*100 << "%\n" << endl;
 
     plot(data, points);
 }
