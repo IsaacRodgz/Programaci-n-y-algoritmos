@@ -35,4 +35,6 @@ vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > da
 
 vector< tuple<double, double> > read_points(const string points_file);
 
+double area_poligon(vector< tuple<double, double> > points);
+
 #endif

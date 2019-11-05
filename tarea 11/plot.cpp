@@ -5,8 +5,6 @@
 # define PI 3.14159265359
 using namespace std;
 
-// g++ -std=c++11 visvalingam.cpp plot.cpp test2.cpp -o test -lcairo && ./test
-
 void plot(vector< tuple<double, double> > data, vector< tuple<double, double> > simplify_data){
 
     int w = 200;

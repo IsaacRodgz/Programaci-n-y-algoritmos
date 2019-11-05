@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// g++ -std=c++11 visvalingam.cpp test2.cpp -o test && ./test
+// g++ -std=c++11 visvalingam.cpp plot.cpp test2.cpp -o test -lcairo && ./test data3.txt 800
 
 void print_point(Point p) {
     cout << "Index: " << p.index << endl;
@@ -24,10 +24,9 @@ void test_visvalingam(const string points_file, double epsilon){
 
     points = simplify_poly(data, epsilon);
 
-    cout << data.size() << endl;
-    cout << points.size() << endl;
     cout << "Umbral de area minima: " << epsilon << endl;
     cout << "Porcentaje de compresion logrado: " << (1.0 - (static_cast<double>(points.size()+2)/data.size()))*100 << "%" << endl;
+    cout << "Porcentaje de error: " << fabs(1.0 - area_poligon(points)/area_poligon(data))*100 << "%" << endl;
 
     plot(data, points);
 }

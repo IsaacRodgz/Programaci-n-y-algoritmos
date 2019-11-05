@@ -127,3 +127,17 @@ vector< tuple<double, double> > read_points(const string points_file){
 
     return data;
 }
+
+double area_poligon(vector< tuple<double, double> > points){
+
+    double area = 0;
+
+    for (size_t i = 0; i < points.size()-1; i++) {
+
+        area += (get<0>(points[i])*get<1>(points[i+1]) - get<0>(points[i+1])*get<1>(points[i]));
+    }
+
+    area += (get<0>(points[points.size()-1])*get<1>(points[0]) - get<0>(points[0])*get<1>(points[points.size()-1]));
+
+    return fabs(area/2);
+}
