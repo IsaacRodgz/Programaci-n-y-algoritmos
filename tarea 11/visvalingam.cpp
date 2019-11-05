@@ -109,3 +109,28 @@ vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > da
 
     return points;
 }
+
+vector< tuple<double, double> > read_points(const string points_file){
+
+    ifstream file(points_file);
+    string line;
+
+    string x;
+    string y;
+
+    vector< tuple<double, double> > data;
+
+    while ( getline(file, line) ) {
+
+        stringstream ss(line);
+
+        getline(ss, x, ',');
+        getline(ss, y, ',');
+
+        //cout << "x: " << stod(x) << ", y: " << stod(y) << endl;
+
+        data.push_back( tuple<double, double>(stod(x), stod(y)) );
+    }
+
+    return data;
+}

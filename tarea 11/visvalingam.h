@@ -33,4 +33,6 @@ double triangle_area( tuple<double, double> x, tuple<double, double> y, tuple<do
 
 vector< tuple<double, double> > simplify_poly(vector< tuple<double, double> > data, double epsilon);
 
+vector< tuple<double, double> > read_points(const string points_file);
+
 #endif

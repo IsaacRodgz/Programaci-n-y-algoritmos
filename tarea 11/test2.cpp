@@ -12,21 +12,31 @@ void print_point(Point p) {
     cout << "Area: " << p.area << "\n" << endl;
 }
 
-void test_visvalingam(){
-
+void test_visvalingam(const string points_file){
+/*
     vector< tuple<double, double> > data = { tuple<double, double>(10, 10), tuple<double, double>(50, 50),
     tuple<double, double>(90, 25), tuple<double, double>(140, 95) };
+*/
+
+    vector< tuple<double, double> > data = read_points(points_file);
 
     vector< tuple<double, double> > points;
 
-    points = simplify_poly(data, 1310);
+    //points = simplify_poly(data, 1);
 
     plot(data, points);
 }
 
 int main(int argc, char const *argv[]) {
 
-    test_visvalingam();
+    if (argc == 1) {
+
+        cerr << "Error: Argument missing: points_file" << endl;
+    }
+
+    else
+
+        test_visvalingam(argv[1]);
 
     return 0;
 }
