@@ -2,6 +2,8 @@
 #include<bits/stdc++.h>
 #include "Organism.h"
 #include "Population.h"
+#include "Environment.h"
+#include "Genetic_Ops.h"
 
 using namespace std;
 
@@ -10,7 +12,8 @@ using namespace std;
 void test_GA(){
 
     int pop_size = 10;
-    int num_bits = 12;
+    int num_bits = 6;
+    int func = 1;
 
     /*
     Organism o1(0, 1, 8);
@@ -27,10 +30,21 @@ void test_GA(){
     cout << "\nX2: " << o1.getX2() << "\n\n";
     */
 
+    Environment env;
     Population p1(pop_size, num_bits);
     p1.initialize();
-    
-
+    env.evaluate(p1, func);
+    p1.print();
+    GeneticOps::select(1, p1, 0.3);
+    cout << "\nSelected: \n\n";
+    p1.print();
+    p1.calculateFreq();
+    p1.updatePopulation();
+    env.evaluate(p1, func);
+    cout << "\nNew population: \n\n";
+    p1.print();
+    GeneticOps::select(1, p1, 0.3);
+    cout << "\nSelected: \n\n";
     p1.print();
 }
 

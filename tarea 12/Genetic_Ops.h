@@ -14,9 +14,7 @@ public:
 
     // CrossOver()
 
-    // Mutate()
-
-    static void select(int method, Population p, double percentage);
+    static void select(int method, Population& p, double percentage);
 
 };
 

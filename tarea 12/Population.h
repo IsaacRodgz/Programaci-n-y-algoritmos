@@ -13,6 +13,7 @@ class Population {
 private:
 
     int size;
+    int sizeO;
     int numBits;
     vector<Organism> popul;
     vector<double> freq;
@@ -23,15 +24,25 @@ public:
 
     int getSize();
     vector<Organism> getPopulation();
+    Organism getElem(int i);
 
     void setSize(int new_size);
+    void setElemFitness(int i, double value);
     void setPopulation(vector<Organism> pop);
 
     void initialize();
 
+    Organism createOrganism();
+
+    void updatePopulation();
+
+    void calculateFreq();
+
     void print();
 
-    Organism createOrganism();
+    void printBinary();
+
+    void printFreqs();
 };
 
 #endif

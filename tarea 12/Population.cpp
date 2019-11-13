@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Population::Population( int sizep, int numBitsp ) : size(sizep), numBits(numBitsp) {
+Population::Population( int sizep, int numBitsp ) : size(sizep), sizeO(sizep), numBits(numBitsp) {
 
 
 }
@@ -41,6 +41,39 @@ Organism Population::createOrganism(){
     return org;
 }
 
+void Population::updatePopulation(){
+
+    size = sizeO;
+
+    for (int i = 0; i < size; i++) {
+
+        popul[i] = (this->createOrganism());
+    }
+}
+
+void Population::calculateFreq(){
+
+    for (int i = 0; i < freq.size(); i++)
+        freq[i] = 0;
+
+    for (int i = 0; i < size; i++) {
+
+        for (int j = 0; j < numBits; j++) {
+
+            string chromosome = popul[i].getChromosome();
+
+            if ( chromosome.compare(j, 1, "1") == 0 )
+                freq[j] += 1.0;
+        }
+    }
+
+    for (int j = 0; j < numBits; j++) {
+
+        freq[j] /= size;
+    }
+
+}
+
 int Population::getSize(){
 
     return size;
@@ -51,9 +84,19 @@ vector<Organism> Population::getPopulation(){
     return popul;
 }
 
+Organism Population::getElem(int i){
+
+    return popul[i];
+}
+
 void Population::setSize(int new_size){
 
     size = new_size;
+}
+
+void Population::setElemFitness(int i, double value){
+
+    popul[i].setFitness(value);
 }
 
 void Population::setPopulation(vector<Organism> pop){
@@ -65,6 +108,23 @@ void Population::print(){
 
     for (int i = 0; i < size; i++) {
 
-        cout << i+1 << ": " << "( " << "x1: " << popul[i].getX1() << ", x2: " << popul[i].getX2() << ")\n";
+        cout << i+1 << ": " << "( " << "x1: " << popul[i].getX1()
+             << ", x2: " << popul[i].getX2() << ".  f(x1, x2) = " << popul[i].getFitness() << "\n";
+    }
+}
+
+void Population::printBinary(){
+
+    for (int i = 0; i < size; i++) {
+
+        cout << i+1 << ": " << popul[i].getChromosome() << "\n";
+    }
+}
+
+void Population::printFreqs(){
+
+    for (int i = 0; i < numBits; i++) {
+
+        cout << "freq[" << i+1 << "]" << ": " << freq[i] << "\n";
     }
 }

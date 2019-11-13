@@ -12,7 +12,7 @@ class Selection {
 
 public:
 
-    static void ranking(Population p, double percentage);
+    static void ranking(Population& p, double percentage);
 
 };
 

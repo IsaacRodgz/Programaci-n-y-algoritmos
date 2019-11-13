@@ -12,7 +12,7 @@ using namespace std;
 
 // Mutate()
 
-void GeneticOps::select(int method, Population p, double percentage){
+void GeneticOps::select(int method, Population& p, double percentage){
 
     Selection::ranking(p, percentage);
 }

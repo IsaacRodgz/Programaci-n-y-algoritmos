@@ -12,11 +12,11 @@ struct compare {
 
     inline bool operator() (const Organism& org1, const Organism& org2) {
 
-        return (org1.getFitness() > org2.getFitness());
+        return (org1.getFitness() < org2.getFitness());
     }
 };
 
-void Selection::ranking(Population p, double percentage){
+void Selection::ranking(Population& p, double percentage){
 
     int size = p.getSize();
 

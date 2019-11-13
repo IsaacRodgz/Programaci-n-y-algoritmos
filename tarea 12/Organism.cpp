@@ -37,7 +37,7 @@ void Organism::decode(){
     val = 0;
     power = 1;
 
-    for (int i = size; i < 2*size-1; i++) {
+    for (int i = size; i < 2*size; i++) {
 
         if ( chromosome.compare(i, 1, "1") == 0 )
             val += power;
