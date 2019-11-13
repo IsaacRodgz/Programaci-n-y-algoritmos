@@ -7,10 +7,10 @@
 
 using namespace std;
 
-Population::Population( int sizep, int numBitsp ) : size(sizep), sizeO(sizep), numBits(numBitsp) {
+Population::Population( int sizep, int numBitsp, double leftp, double rightp ) :
 
+    size(sizep), sizeO(sizep), numBits(numBitsp), left(leftp), right(rightp) { }
 
-}
 
 void Population::initialize(){
 
@@ -34,7 +34,7 @@ void Population::initialize(){
 
 Organism Population::createOrganism(){
 
-    Organism org(0, 1, numBits);
+    Organism org(left, right, numBits);
     org.setChromosome(freq);
     org.decode();
 
@@ -43,12 +43,17 @@ Organism Population::createOrganism(){
 
 void Population::updatePopulation(){
 
-    size = sizeO;
-
     for (int i = 0; i < size; i++) {
 
         popul[i] = (this->createOrganism());
     }
+
+    for (int i = size; i < sizeO; i++) {
+
+        popul.push_back(this->createOrganism());
+    }
+
+    size = sizeO;
 }
 
 void Population::calculateFreq(){

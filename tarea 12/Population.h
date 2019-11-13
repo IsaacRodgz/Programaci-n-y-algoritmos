@@ -15,12 +15,14 @@ private:
     int size;
     int sizeO;
     int numBits;
+    double left;
+    double right;
     vector<Organism> popul;
     vector<double> freq;
 
 public:
 
-    Population( int size, int numBits );
+    Population( int size, int numBits, double left, double right );
 
     int getSize();
     vector<Organism> getPopulation();
