@@ -11,11 +11,14 @@ using namespace std;
 
 void test_GA(){
 
+    // f1 [-3, 3]
+    // f2 [0, 4]
+
     int pop_size = 30;
     int num_bits = 20;
-    int func = 1;
-    double left = -3;
-    double right = 3;
+    int func = 2;
+    double left = -4;
+    double right = 4;
     int selection_method = 1;
     int iters = 50;
     double percentage = 0.3;
