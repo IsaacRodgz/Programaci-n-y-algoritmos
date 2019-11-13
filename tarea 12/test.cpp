@@ -9,6 +9,9 @@ using namespace std;
 
 void test_GA(){
 
+    int pop_size = 10;
+    int num_bits = 12;
+
     /*
     Organism o1(0, 1, 8);
 
@@ -24,8 +27,9 @@ void test_GA(){
     cout << "\nX2: " << o1.getX2() << "\n\n";
     */
 
-    Population p1(10, 12);
+    Population p1(pop_size, num_bits);
     p1.initialize();
+    
 
     p1.print();
 }

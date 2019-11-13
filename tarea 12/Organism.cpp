@@ -11,7 +11,7 @@ Organism::Organism( double leftp, double rightp, int numBitsp ) : left(leftp), r
 
 }
 
-void Organism::evaluate(){
+void Organism::decode(){
 
     int size = numBits/2;
     double epsilon = (right-left)/(1<<size);
@@ -65,6 +65,11 @@ string Organism::getChromosome(){
     return chromosome;
 }
 
+double Organism::getFitness() const{
+
+        return fitness;
+}
+
 void Organism::setChromosome( vector<double> freq ){
 
     random_device rd;
@@ -84,4 +89,9 @@ void Organism::setChromosome( vector<double> freq ){
         else
             chromosome += "0";
     }
+}
+
+void Organism::setFitness(double value){
+
+    fitness = value;
 }

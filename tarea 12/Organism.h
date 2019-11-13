@@ -10,6 +10,7 @@ class Organism {
 
 private:
 
+    double fitness;
     double x1;
     double x2;
     string chromosome;
@@ -21,13 +22,15 @@ public:
 
     Organism( double left, double right, int numBits );
 
-    void evaluate();
+    void decode();
 
     double getX1();
     double getX2();
+    double getFitness() const;
     string getChromosome();
 
     void setChromosome(vector<double> freq);
+    void setFitness(double value);
 
 };
 
