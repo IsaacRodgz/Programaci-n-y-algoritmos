@@ -9,7 +9,7 @@ using namespace std;
 
 Population::Population( int sizep, int numBitsp, double leftp, double rightp ) :
 
-    size(sizep), sizeO(sizep), numBits(numBitsp), left(leftp), right(rightp) { }
+    size(sizep), sizeO(sizep), numBits(numBitsp), left(leftp), right(rightp), variance(0.0) { }
 
 
 void Population::initialize(){
@@ -84,6 +84,11 @@ int Population::getSize(){
     return size;
 }
 
+int Population::getSizeO(){
+
+    return sizeO;
+}
+
 vector<Organism> Population::getPopulation(){
 
     return popul;
@@ -92,6 +97,11 @@ vector<Organism> Population::getPopulation(){
 Organism Population::getElem(int i){
 
     return popul[i];
+}
+
+double Population::getVariance(){
+
+    return variance;
 }
 
 void Population::setSize(int new_size){
@@ -107,6 +117,11 @@ void Population::setElemFitness(int i, double value){
 void Population::setPopulation(vector<Organism> pop){
 
     popul = pop;
+}
+
+void Population::setVariance(double variancep){
+
+    variance = variancep;
 }
 
 void Population::print(){

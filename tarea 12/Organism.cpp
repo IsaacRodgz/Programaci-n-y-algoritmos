@@ -6,17 +6,22 @@
 
 using namespace std;
 
-Organism::Organism( double leftp, double rightp, int numBitsp ) : left(leftp), right(rightp), numBits(numBitsp) {
+Organism::Organism( double leftp, double rightp, int numBitsp ) :
+    left(leftp), right(rightp), numBits(numBitsp) {}
 
-
-}
+Organism::Organism( ) {}
 
 void Organism::decode(){
 
+    // Assign half of the bits to variable X1 and half to X2
+
     int size = numBits/2;
+
+    // Variables X1, X2 take values in discrete increments of (b-a)/(2^n)
+
     double epsilon = (right-left)/(1<<size);
 
-    // set x1
+    // decode organism chromosome of X1 to a real value
 
     int val = 0;
     int power = 1;
@@ -32,7 +37,7 @@ void Organism::decode(){
 
     x1 = left + val*epsilon;
 
-    // set x1
+    // decode organism chromosome of X2 to a real value
 
     val = 0;
     power = 1;

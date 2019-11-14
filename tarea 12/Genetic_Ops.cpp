@@ -8,9 +8,21 @@
 
 using namespace std;
 
-// CrossOver()
-
 // Mutate()
+
+void GeneticOps::crossOver(Population& p){
+
+    vector<Organism> new_pop;
+
+    p.setSize(p.getSizeO());
+
+    for (int i = 0; i < p.getSize(); i++) {
+
+        new_pop.push_back(p.createOrganism());
+    }
+
+    p.setPopulation(new_pop);
+}
 
 void GeneticOps::select(int method, Population& p, double percentage){
 

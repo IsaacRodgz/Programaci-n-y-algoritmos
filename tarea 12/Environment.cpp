@@ -18,6 +18,13 @@ double Environment::f2(double x1, double x2){
 
 void Environment::evaluate(Population& p, int option){
 
+    // Variables to update variance
+
+    double mean;
+    double variance = 0;
+
+    // Update fitness value of each organism
+
     for (int i = 0; i < p.getSize(); i++) {
 
         double x1 = p.getElem(i).getX1();
@@ -34,7 +41,21 @@ void Environment::evaluate(Population& p, int option){
                 break;
         }
 
-        p.setElemFitness(i, fitness);
+        mean += fitness;
 
+        p.setElemFitness(i, fitness);
     }
+
+    mean /= p.getSize();
+
+    // Calculate variance of fitness in population
+
+    for (int i = 0; i < p.getSize(); i++) {
+
+        variance += (p.getElem(i).getFitness() - mean)*(p.getElem(i).getFitness() - mean);
+    }
+
+    variance /= (p.getSize()-1);
+
+    p.setVariance(variance);
 }

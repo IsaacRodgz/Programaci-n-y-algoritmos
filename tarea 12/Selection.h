@@ -12,6 +12,8 @@ class Selection {
 
 public:
 
+    // Methods
+
     static void ranking(Population& p, double percentage);
 
 };

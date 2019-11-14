@@ -1,5 +1,6 @@
 #include <iostream>
 #include<bits/stdc++.h>
+#include "GA.h"
 #include "Organism.h"
 #include "Population.h"
 #include "Environment.h"
@@ -12,7 +13,9 @@ using namespace std;
 void test_GA(){
 
     // f1 [-3, 3]
-    // f2 [0, 4]
+    // f2 [-4, 4]
+
+    // Set algorithm parameters
 
     int pop_size = 30;
     int num_bits = 20;
@@ -22,57 +25,31 @@ void test_GA(){
     int selection_method = 1;
     int iters = 50;
     double percentage = 0.3;
+    double epsilon = 0.000001;
 
-    /*
-    Organism o1(0, 1, 8);
+    // Initialize new genetic algorithm with specified parameters
 
-    vector<double> freq{0.825, 0.925, 0.7, 0.95, 0.1, 0.15, 0.2, 0.05};
+    GA ga(pop_size, num_bits, func, left, right, selection_method, iters, percentage, epsilon);
 
-    o1.setChromosome(freq);
+    // Print parameters to console
 
-    cout << "\n" << o1.getChromosome() << "\n";
+    ga.print();
 
-    o1.evaluate();
+    // Excecute Genetic Algorithm to find minimum of function
 
-    cout << "\nX1: " << o1.getX1() << "\n";
-    cout << "\nX2: " << o1.getX2() << "\n\n";
-    */
+    ga.run();
 
-    /*
-    Environment env;
-    Population p1(pop_size, num_bits);
-    p1.initialize();
-    env.evaluate(p1, func);
-    p1.print();
-    GeneticOps::select(selection_method, p1, 0.3);
-    cout << "\nSelected: \n\n";
-    p1.print();
-    p1.calculateFreq();
-    p1.updatePopulation();
-    env.evaluate(p1, func);
-    cout << "\nNew population: \n\n";
-    p1.print();
-    GeneticOps::select(selection_method, p1, 0.3);
-    cout << "\nSelected: \n\n";
-    p1.print();
-    */
+    // Get best solution found by the algorithm
 
-    Environment env;
-    Population p1(pop_size, num_bits, left, right);
-    p1.initialize();
-    env.evaluate(p1, func);
-    // TODO: Take best
+    Organism best = ga.getBest();
 
-    for (int i = 0; i < iters; i++) {
+    // Print best solution to console
 
-        GeneticOps::select(selection_method, p1, percentage);
-        p1.calculateFreq();
-        p1.updatePopulation();
-        env.evaluate(p1, func);
-        // TODO: Take best
-    }
+    cout << "\nBest solution found: f(" << best.getX1() << ", " << best.getX2()
+    << ") = " << best.getFitness()  << endl;
 
-    p1.print();
+    cout << "\nFound after " << ga.getLastIter() << " iterations\n" << endl;
+
 }
 
 int main(int argc, char const *argv[]) {

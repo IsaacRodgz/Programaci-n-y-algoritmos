@@ -12,6 +12,8 @@ class Environment {
 
 public:
 
+    // Methods
+
     double f1(double x1, double x2);
 
     double f2(double x1, double x2);

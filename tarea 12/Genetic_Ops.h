@@ -12,7 +12,9 @@ class GeneticOps {
 
 public:
 
-    // CrossOver()
+    // Methods
+
+    static void crossOver(Population& p);
 
     static void select(int method, Population& p, double percentage);
 
