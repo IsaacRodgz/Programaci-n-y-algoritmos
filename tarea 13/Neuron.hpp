@@ -13,12 +13,13 @@ protected:
     int num_inputs;
     vector<double> weights;
     double bias;
+    string activation_function;
 
 public:
 
     // Constructor
 
-    Neuron(int num_inputs_p, bool use_constant_weight, double constant_weight);
+    Neuron(int num_inputs_p, bool use_constant_weight, double constant_weight, string activation_function_p);
 
     // Methods
 
@@ -27,6 +28,8 @@ public:
     static double gen();
 
     void calculateInnerProduct(vector<double> &input, double* output);
+
+    void activateNeuron(vector<double> &input, double* output);
 
     // Getters
 

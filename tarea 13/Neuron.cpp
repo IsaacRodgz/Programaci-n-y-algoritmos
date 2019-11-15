@@ -1,15 +1,21 @@
 #include "Neuron.hpp"
+#include "Activation.hpp"
 
 #include <math.h>
 #include <bits/stdc++.h>
 
 using namespace std;
 
-Neuron::Neuron(int num_inputs_p, bool use_constant_weight = false, double constant_weight = 0.0) :
-    num_inputs(num_inputs_p), bias(0.0) {
+// Constructor
+
+Neuron::Neuron(int num_inputs_p, bool use_constant_weight,
+    double constant_weight, string activation_function_p) :
+    num_inputs(num_inputs_p), bias(0.0), activation_function(activation_function_p) {
 
         weight_initialization(use_constant_weight, constant_weight);
     }
+
+// Methods
 
 void Neuron::weight_initialization(bool use_constant_weight, double constant_weight) {
 
@@ -38,6 +44,15 @@ double Neuron::gen(){
 void Neuron::calculateInnerProduct(vector<double> &input, double* output){
 
     *output = inner_product(begin(input), end(input), begin(weights), 0.0);
+}
+
+void Neuron::activateNeuron(vector<double> &input, double* output){
+
+    double inner_product;
+
+    calculateInnerProduct(input, &inner_product);
+
+    *output = Activation::activate(activation_function, inner_product);
 }
 
 // Getters
