@@ -59,6 +59,9 @@ void GA::run(){
 
         // Test if organisms differ in fitness at most by epsilon and stop iteration if true
 
+        cout << "\nCurrent convergence value: ";
+        cout << p.getVariance() << endl;
+
         if ( p.getVariance() < epsilon )
             break;
     }

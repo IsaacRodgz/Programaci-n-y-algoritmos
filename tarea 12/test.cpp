@@ -2,34 +2,16 @@
 #include<bits/stdc++.h>
 #include "GA.h"
 #include "Organism.h"
-#include "Population.h"
-#include "Environment.h"
-#include "Genetic_Ops.h"
 
 using namespace std;
 
-// g++ -std=c++11 Organism.cpp Population.cpp test.cpp -o test && ./test
+// g++ -std=c++11 Organism.cpp Population.cpp Genetic_Ops.cpp Selection.cpp Environment.cpp GA.cpp test.cpp -o test && ./test
 
-void test_GA(){
-
-    // f1 [-3, 3]
-    // f2 [-4, 4]
-
-    // Set algorithm parameters
-
-    int pop_size = 30;
-    int num_bits = 20;
-    int func = 2;
-    double left = -4;
-    double right = 4;
-    int selection_method = 1;
-    int iters = 50;
-    double percentage = 0.3;
-    double epsilon = 0.000001;
+void test_GA(int pop_size, int num_bits, int func_option, double left_limit, double right_limit, int max_iters, double selection_percentage, double epsilon){
 
     // Initialize new genetic algorithm with specified parameters
 
-    GA ga(pop_size, num_bits, func, left, right, selection_method, iters, percentage, epsilon);
+    GA ga(pop_size, num_bits, func_option, left_limit, right_limit, 1, max_iters, selection_percentage, epsilon);
 
     // Print parameters to console
 
@@ -49,12 +31,19 @@ void test_GA(){
     << ") = " << best.getFitness()  << endl;
 
     cout << "\nFound after " << ga.getLastIter() << " iterations\n" << endl;
-
 }
 
 int main(int argc, char const *argv[]) {
 
-    test_GA();
+    if ( argc < 9 ) {
+
+        cerr << "\n8 arguments are required: pop_size, num_bits, func_option, left_limit, right_limit, max_iters, selection_percentage, epsilon" << "\n\n";
+    }
+
+    else {
+
+        test_GA( atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atof(argv[4]), atof(argv[5]), atoi(argv[6]), atof(argv[7]), atof(argv[8]));
+    }
 
     return 0;
 }

@@ -8,7 +8,7 @@ using namespace std;
 
 double Environment::f1(double x1, double x2){
 
-    return 0.2*x1*x1 + 0.2*x2*x2 - 5*cos(x1 + x2) + 2;
+    return x1*x1 + x2*x2 + 4;
 }
 
 double Environment::f2(double x1, double x2){
