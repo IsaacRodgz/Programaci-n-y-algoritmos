@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// g++ -std=c++11 Neuron.cpp test.cpp -o test && ./test
+// g++ -std=c++11 Activation.cpp Neuron.cpp Layer.cpp Network.cpp test.cpp -o test && ./test
 
 void test_MLP(){
 
@@ -30,7 +30,7 @@ void test_MLP(){
 
     */
 
-    vector<double> x = {1.0, 1.0, 1.0};
+    //vector<double> x = {1.0, 1.0, 1.0};
 
     /*
 
@@ -82,6 +82,8 @@ void test_MLP(){
 
     */
 
+    /*
+
     Network model = Network();
 
     model.addData(3);
@@ -116,6 +118,33 @@ void test_MLP(){
     }
 
     cout << "\n\n";
+
+    */
+
+    vector<vector<double> > x = {{1.0}, {0.0}, {1.0}};
+    vector<vector<double> > y = {{0.0}, {1.0}, {0.0}};
+
+    Network model = Network();
+
+    model.addData(1);
+    model.addDense(3, "relu");
+    model.addOutput(1, "sigmoid");
+
+    //model.printWeights();
+
+    /*
+    cout << "\nPrediction: ";
+
+    vector<double> output = model.predict(x);
+
+    for (int i = 0; i < output.size(); i++) {
+        cout << output[i] << " ";
+    }
+    cout << "\n\n";
+    */
+
+    model.compile("sgd", "mse", "accuracy");
+    model.fit(x, y, 2, 1);
 
 }
 
