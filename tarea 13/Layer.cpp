@@ -18,11 +18,30 @@ Layer::Layer(int input_size_p, int output_size_p, string activation_function_p) 
 
 // Methods
 
-void Layer::activateLayer(vector<double> &input, vector<double> &output){
+void Layer::activateLayer(vector<double> &input){
 
     for (int i = 0; i < output_size; i++) {
 
-        units[i].activateNeuron(input, &output[i]);
+        units[i].activateNeuron(input);
+    }
+}
+
+void Layer::updateWeights(vector<double> &dz_dw, vector<double> &delta, bool last_layer_flag, double learning_rate){
+
+    if ( last_layer_flag ) {
+
+        for (int i = 0; i < units.size(); i++) {
+
+            units[i].updateWeights(dz_dw[i], delta[0], learning_rate);
+        }
+    }
+
+    else {
+
+        for (int i = 0; i < units.size(); i++) {
+
+            //units[i].updateWeights(dz_dw[i], delta[0], learning_rate);
+        }
     }
 }
 
@@ -41,6 +60,18 @@ int Layer::getOutputSize(){
 vector<Neuron> Layer::getUnits(){
 
     return units;
+}
+
+vector<double> Layer::getActivatedOutput(){
+
+    vector<double> output;
+
+    for (int i = 0; i < getOutputSize(); i++) {
+
+        output.push_back(units[i].getActivatedOutput());
+    }
+
+    return output;
 }
 
 // Setters

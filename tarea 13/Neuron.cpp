@@ -41,18 +41,26 @@ double Neuron::gen(){
     return dist(e2);
 }
 
-void Neuron::calculateInnerProduct(vector<double> &input, double* output){
+void Neuron::calculateInnerProduct(vector<double> &input){
 
-    *output = inner_product(begin(input), end(input), begin(weights), 0.0);
+    weighted_output = inner_product(begin(input), end(input), begin(weights), 0.0);
+    weighted_output += bias;
 }
 
-void Neuron::activateNeuron(vector<double> &input, double* output){
+void Neuron::activateNeuron(vector<double> &input){
 
-    double inner_product;
+    calculateInnerProduct(input);
 
-    calculateInnerProduct(input, &inner_product);
+    activated_output = Activation::activate(activation_function, weighted_output);
+}
 
-    *output = Activation::activate(activation_function, inner_product);
+void Neuron::updateWeights(double dz_dw, double delta, double learning_rate){
+
+    for (int i = 0; i < weights.size(); i++) {
+
+        weights[i] -= learning_rate*(dz_dw*delta);
+        bias -= learning_rate*delta;
+    }
 }
 
 // Getters
@@ -75,6 +83,16 @@ vector<double> Neuron::getWeights(){
 int Neuron::getWeightsSize(){
 
     return weights.size();
+}
+
+double Neuron::getWeightedOutput(){
+
+    return weighted_output;
+}
+
+double Neuron::getActivatedOutput(){
+
+    return activated_output;
 }
 
 // Setters

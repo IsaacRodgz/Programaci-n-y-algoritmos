@@ -14,6 +14,8 @@ protected:
     vector<double> weights;
     double bias;
     string activation_function;
+    double weighted_output;
+    double activated_output;
 
 public:
 
@@ -27,9 +29,11 @@ public:
 
     static double gen();
 
-    void calculateInnerProduct(vector<double> &input, double* output);
+    void calculateInnerProduct(vector<double> &input);
 
-    void activateNeuron(vector<double> &input, double* output);
+    void activateNeuron(vector<double> &input);
+
+    void updateWeights(double dz_dw, double delta, double learning_rate);
 
     // Getters
 
@@ -40,6 +44,10 @@ public:
     vector<double> getWeights();
 
     int getWeightsSize();
+
+    double getWeightedOutput();
+
+    double getActivatedOutput();
 
     // Setters
 

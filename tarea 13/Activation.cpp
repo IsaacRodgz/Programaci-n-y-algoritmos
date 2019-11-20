@@ -17,7 +17,7 @@ double Activation::activate(string activation_function, double inner_product){
 
     else if ( activation_function == "sigmoid" ) {
 
-        return 1.0/(1+exp(-inner_product));
+        return 1.0/(1.0+exp(-inner_product));
     }
 
     else

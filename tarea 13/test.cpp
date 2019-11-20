@@ -34,7 +34,7 @@ void test_MLP(){
 
     /*
 
-    Neuron n(3, false, 0.0, "relu");
+    Neuron n(3, false, 0.0, "sigmoid");
 
     cout << "\n";
 
@@ -45,19 +45,17 @@ void test_MLP(){
 
     cout << "\n";
 
-    n.calculateInnerProduct(x, &output);
+    n.activateNeuron(x);
 
-    cout << "Inner product: " << output << "\n" << endl;
+    cout << "Inner product: " << n.getWeightedOutput() << "\n" << endl;
 
-    n.activateNeuron(x, &output);
-
-    cout << "Activated value: " << output << "\n" << endl;
+    cout << "Activated value: " << n.getActivatedOutput() << "\n" << endl;
 
     */
 
     /*
 
-    Layer l(3, 3, "relu");
+    Layer l(3, 3, "sigmoid");
 
     cout << "Weights: \n";
 
@@ -69,15 +67,17 @@ void test_MLP(){
 
             cout << l.getUnits()[i].getWeights()[j] << endl;
         }
+
+        cout << l.getUnits()[i].getBias() << endl;
     }
 
     cout << "\n";
 
-    l.activateLayer(x, output);
+    l.activateLayer(x);
 
-    for (int i = 0; i < output.size(); i++) {
+    for (int i = 0; i < l.getOutputSize(); i++) {
 
-        cout << "Activated value: " << output[i] << "\n" << endl;
+        cout << "Activated value: " << l.getUnits()[i].getActivatedOutput() << "\n" << endl;
     }
 
     */
@@ -87,10 +87,14 @@ void test_MLP(){
     Network model = Network();
 
     model.addData(3);
-    model.addDense(3, "relu");
+    model.addDense(3, "sigmoid");
     model.addOutput(1, "sigmoid");
 
+    model.forward(x);
+
     vector<Layer> layers = model.getLayers();
+
+    cout << "\nNum layers: " << layers.size() << "\n\n";
 
     for (int k = 0; k < layers.size(); k++) {
 
@@ -104,23 +108,29 @@ void test_MLP(){
 
                 cout << layers[k].getUnits()[i].getWeights()[j] << endl;
             }
+
+            cout << layers[k].getUnits()[i].getBias() << endl;
+
+            cout << layers[k].getUnits()[i].getActivatedOutput() << endl;
         }
 
         cout << "\n";
     }
 
-    cout << "\nPrediction: ";
+    cout << "\nPrediction: \n\n";
 
-    vector<double> output = model.predict(x);
+    for (int i = 0; i < layers[layers.size()-1].getOutputSize(); i++) {
 
-    for (int i = 0; i < output.size(); i++) {
-        cout << output[i] << " ";
+        cout << layers[layers.size()-1].getUnits()[i].getActivatedOutput() << " ";
     }
 
     cout << "\n\n";
 
     */
 
+
+    //*
+    vector<double> x0 = {1.0};
     vector<vector<double> > x = {{1.0}, {0.0}, {1.0}};
     vector<vector<double> > y = {{0.0}, {1.0}, {0.0}};
 
@@ -132,19 +142,10 @@ void test_MLP(){
 
     //model.printWeights();
 
-    /*
-    cout << "\nPrediction: ";
-
-    vector<double> output = model.predict(x);
-
-    for (int i = 0; i < output.size(); i++) {
-        cout << output[i] << " ";
-    }
-    cout << "\n\n";
-    */
-
-    model.compile("sgd", "mse", "accuracy");
+    model.compile("sgd", "mse", "accuracy", 0.01);
     model.fit(x, y, 2, 1);
+
+    //*/
 
 }
 

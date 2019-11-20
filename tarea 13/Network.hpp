@@ -19,6 +19,7 @@ private:
     string optimizer;
     string loss;
     string metric;
+    double learning_rate;
 
 public:
 
@@ -34,11 +35,15 @@ public:
 
     void addOutput(int num_outputs, string activation_function);
 
-    void compile(string optimizer_p, string loss_p, string metric_p);
+    void compile(string optimizer_p, string loss_p, string metric_p, double learning_rate_p);
 
     vector<double> predict(vector<double> &input);
 
-    void getOutput(vector<double> &input, vector<vector<double> > &z_layers, vector<double> &f_l);
+    void forward(vector<double> &input);
+
+    double crossEntropyCost(double y, double y_hat);
+
+    void updateWeights(vector<double> y);
 
     void fit(vector<vector<double> > x, vector<vector<double> > y, int epochs, int batch_size);
 
