@@ -128,24 +128,36 @@ void test_MLP(){
 
     */
 
+    //vector<vector<double> > x = {{1.0}, {0.0}, {1.0}, {0.0}, {1.0}};
+    //vector<vector<double> > y = {{0.0}, {1.0}, {0.0}, {1.0}, {0.0}};
 
-    //*
-    vector<double> x0 = {1.0};
-    vector<vector<double> > x = {{1.0}, {0.0}, {1.0}};
-    vector<vector<double> > y = {{0.0}, {1.0}, {0.0}};
+
+    // XOR
+    vector<vector<double> > x = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
+    vector<vector<double> > y = {{0.0}, {1.0}, {1.0}, {0.0}};
 
     Network model = Network();
 
-    model.addData(1);
-    model.addDense(3, "relu");
+    model.addData(2);
+    model.addDense(3, "sigmoid");
     model.addOutput(1, "sigmoid");
 
     //model.printWeights();
 
     model.compile("sgd", "mse", "accuracy", 0.01);
-    model.fit(x, y, 2, 1);
+    model.fit(x, y, 5000, 1);
 
-    //*/
+    vector<double> x_test = {1.0, 1.0};
+    vector<double> y_pred = model.predict(x_test);
+
+    cout << "\n\nPrediction: \n" << endl;
+
+    for (int i = 0; i < y_pred.size(); i++) {
+
+        cout << y_pred[i] << " " << endl;
+    }
+
+
 
 }
 

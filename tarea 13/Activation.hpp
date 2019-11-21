@@ -12,6 +12,8 @@ public:
 
     static double activate(string activation_function, double inner_product);
 
+    static double activateDerivative(string activation_function, double inner_product);
+
 };
 
 #endif

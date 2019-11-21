@@ -16,6 +16,7 @@ protected:
     string activation_function;
     double weighted_output;
     double activated_output;
+    double activated_output_derivative;
 
 public:
 
@@ -33,7 +34,7 @@ public:
 
     void activateNeuron(vector<double> &input);
 
-    void updateWeights(double dz_dw, double delta, double learning_rate);
+    void updateWeights(vector<double> &dz_dw, double delta, double learning_rate);
 
     // Getters
 
@@ -48,6 +49,8 @@ public:
     double getWeightedOutput();
 
     double getActivatedOutput();
+
+    double getActivatedOutputDerivative();
 
     // Setters
 

@@ -52,13 +52,14 @@ void Neuron::activateNeuron(vector<double> &input){
     calculateInnerProduct(input);
 
     activated_output = Activation::activate(activation_function, weighted_output);
+    activated_output_derivative = Activation::activateDerivative(activation_function, weighted_output);
 }
 
-void Neuron::updateWeights(double dz_dw, double delta, double learning_rate){
+void Neuron::updateWeights(vector<double> &dz_dw, double delta, double learning_rate){
 
     for (int i = 0; i < weights.size(); i++) {
 
-        weights[i] -= learning_rate*(dz_dw*delta);
+        weights[i] -= learning_rate*(dz_dw[i]*delta);
         bias -= learning_rate*delta;
     }
 }
@@ -93,6 +94,11 @@ double Neuron::getWeightedOutput(){
 double Neuron::getActivatedOutput(){
 
     return activated_output;
+}
+
+double Neuron::getActivatedOutputDerivative(){
+
+    return activated_output_derivative;
 }
 
 // Setters

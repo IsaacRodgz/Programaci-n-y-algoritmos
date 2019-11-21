@@ -27,7 +27,7 @@ public:
 
     void activateLayer(vector<double> &input);
 
-    void updateWeights(vector<double> &dz_dw, vector<double> &delta, bool last_layer_flag, double learning_rate);
+    void updateWeights(vector<double> &dz_dw, vector<double> &delta, double learning_rate);
 
     // Getters
 
@@ -38,6 +38,10 @@ public:
     vector<Neuron> getUnits();
 
     vector<double> getActivatedOutput();
+
+    vector<double> getActivatedOutputDerivative();
+
+    string getActivationFunction();
 
     // Setters
 

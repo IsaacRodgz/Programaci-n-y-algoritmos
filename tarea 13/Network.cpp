@@ -68,6 +68,14 @@ vector<double> Network::predict(vector<double> &input){
     layers[num_layers-1].activateLayer(input_temp);
     output_temp = layers[num_layers-1].getActivatedOutput();
 
+    for (int k = 0; k < output_temp.size(); k++) {
+
+        if ( output_temp[k] >= 0.5 )
+            output_temp[k] = 1;
+        else
+            output_temp[k] = 0;
+    }
+
     return output_temp;
 }
 
@@ -89,14 +97,17 @@ double Network::crossEntropyCost(double y, double y_hat){
     return -(y*log(y_hat) + (1-y)*log(1-y_hat));
 }
 
-void Network::updateWeights(vector<double> y){
+void Network::updateWeights(vector<double> x, vector<double> y){
 
     vector<double> delta = {};
 
     // delta at output layer
 
-    double delta_l = layers[num_layers-1].getActivatedOutput()[0] - y[0];
-    delta.push_back(delta_l);
+    for (int i = 0; i < y.size(); i++) {
+
+        double delta_l = layers[num_layers-1].getActivatedOutput()[i] - y[i];
+        delta.push_back(delta_l);
+    }
 
     // Update last layer weights
 
@@ -107,15 +118,58 @@ void Network::updateWeights(vector<double> y){
     */
 
     vector<double> dz_dw = layers[num_layers-2].getActivatedOutput();
-    layers[num_layers-1].updateWeights(dz_dw, delta, true, learning_rate);
+    layers[num_layers-1].updateWeights(dz_dw, delta, learning_rate);
 
     // Update hidden layers weights
 
+    vector<Neuron> l_front;
+    vector<double> delta_temp;
+    vector<double> activate_prime;
+
     for (int i = num_layers-2; i >= 0; i--) {
 
-        // TODO: Update dz_dw and delta
+        // Update dz/dW^L = a^(l-1)
+        // If l = 0, a^(l-1) = x
 
-        layers[i].updateWeights(dz_dw, delta, false, learning_rate);
+        if (i == 0) {
+
+            dz_dw = x;
+        }
+
+        else{
+
+            dz_dw = layers[i-1].getActivatedOutput();
+        }
+
+        // Update delta_l
+
+        delta_temp.resize(layers[i].getOutputSize(), 0.0);
+
+        // Get weights of layer l+1
+
+        l_front = layers[i+1].getUnits();
+
+        for (int j = 0; j < l_front.size(); j++) {
+
+            for (int k = 0; k < l_front[j].getNumInputs(); k++) {
+
+                delta_temp[k] += l_front[j].getWeights()[k] * delta[j];
+            }
+        }
+
+        activate_prime = layers[i].getActivatedOutputDerivative();
+
+        delta.resize(delta_temp.size(), 0.0);
+
+        for (int j = 0; j < delta.size(); j++) {
+
+            delta[j] = delta_temp[j]*activate_prime[j];
+        }
+
+        // Update weights
+
+        layers[i].updateWeights(dz_dw, delta, learning_rate);
+
     }
 }
 
@@ -124,20 +178,31 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
     // MSE calculated for each iteration
 
     double mse_current;
+    vector<double> y_hat;
 
-    for (int i = 0; i < x.size(); i++) {
+    for (size_t e = 0; e < epochs; e++) {
 
-        double current_cost = 0;
+        cout << "\nEpoch " << e+1 << "\n" << endl;
 
-        forward(x[i]);
+        for (int i = 0; i < x.size(); i++) {
 
-        for (int j = 0; j < layers[num_layers-1].getOutputSize(); j++) {
+            double current_cost = 0;
 
-            current_cost += crossEntropyCost(y[i][j], layers[num_layers-1].getActivatedOutput()[j]);
+            forward(x[i]);
+
+            for (int j = 0; j < layers[num_layers-1].getOutputSize(); j++) {
+
+                y_hat = layers[num_layers-1].getActivatedOutput();
+
+                current_cost += crossEntropyCost(y[i][j], y_hat[j]);
+            }
+
+            cout << "\nCost: " << current_cost << "\n" << endl;
+
+            updateWeights(x[i], y[i]);
         }
 
-        updateWeights(y[i]);
-
+        cout << "\n" << endl;
     }
 
 }
