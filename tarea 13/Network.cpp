@@ -184,7 +184,7 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
 
         epoch_loss = 0;
 
-        cout << "\nEpoch " << e+1 << "\n" << endl;
+        //cout << "\nEpoch " << e+1 << "\n" << endl;
 
         for (int i = 0; i < x.size(); i++) {
 
@@ -208,9 +208,9 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
 
         training_loss.push_back(epoch_loss);
 
-        cout << "\nCost: " << epoch_loss << "\n" << endl;
+        //cout << "\nCost: " << epoch_loss << "\n" << endl;
 
-        cout << "\n" << endl;
+        //cout << "\n" << endl;
     }
 }
 

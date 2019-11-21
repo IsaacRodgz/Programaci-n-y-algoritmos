@@ -4,10 +4,11 @@
 #include "Layer.hpp"
 #include "Network.hpp"
 #include "Data.hpp"
+#include "Graph.hpp"
 
 using namespace std;
 
-// g++ -std=c++11 Activation.cpp Neuron.cpp Layer.cpp Network.cpp Data.cpp test.cpp -o test && ./test
+// g++ -std=c++11 -lcairo Activation.cpp Neuron.cpp Layer.cpp Network.cpp Data.cpp Graph.cpp test.cpp -o test && ./test
 
 void test_MLP(){
 
@@ -239,6 +240,16 @@ void test_MLP(){
 
     cout << "\n\nAccuracy: " << model.getAccuracy() << "\n" << endl;
 
+    /*
+    vector<double> trainingLoss = model.getTrainingLoss();
+
+    for (int i = 0; i < trainingLoss.size(); i++) {
+
+        cout << i << " " << trainingLoss[i] << endl;
+    }
+    */
+
+    plot(trainingLoss);
 }
 
 int main(int argc, char const *argv[]) {
