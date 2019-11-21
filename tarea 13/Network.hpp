@@ -20,6 +20,10 @@ private:
     string loss;
     string metric;
     double learning_rate;
+    vector<double> training_loss;
+    double accuracy;
+    double precision;
+    double recall;
 
 public:
 
@@ -47,11 +51,17 @@ public:
 
     void fit(vector<vector<double> > x, vector<vector<double> > y, int epochs, int batch_size);
 
+    void eval(vector<vector<double> > x_test, vector<vector<double> > y_test);
+
     void printWeights();
 
     // Getters
 
     vector<Layer> getLayers();
+
+    vector<double> getTrainingLoss();
+
+    double getAccuracy();
 
     // Setters
 

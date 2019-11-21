@@ -177,16 +177,18 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
 
     // MSE calculated for each iteration
 
-    double mse_current;
+    double epoch_loss;
     vector<double> y_hat;
 
     for (size_t e = 0; e < epochs; e++) {
+
+        epoch_loss = 0;
 
         cout << "\nEpoch " << e+1 << "\n" << endl;
 
         for (int i = 0; i < x.size(); i++) {
 
-            double current_cost = 0;
+            double current_loss = 0;
 
             forward(x[i]);
 
@@ -194,17 +196,51 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
 
                 y_hat = layers[num_layers-1].getActivatedOutput();
 
-                current_cost += crossEntropyCost(y[i][j], y_hat[j]);
+                current_loss += crossEntropyCost(y[i][j], y_hat[j]);
             }
 
-            cout << "\nCost: " << current_cost << "\n" << endl;
+            epoch_loss += current_loss;
 
             updateWeights(x[i], y[i]);
         }
 
+        epoch_loss /= x.size();
+
+        training_loss.push_back(epoch_loss);
+
+        cout << "\nCost: " << epoch_loss << "\n" << endl;
+
         cout << "\n" << endl;
     }
+}
 
+void Network::eval(vector<vector<double> > x_test, vector<vector<double> > y_test){
+
+    vector<double> y_pred;
+    bool equal;
+    accuracy = 0;
+
+    for (int i = 0; i < x_test.size(); i++) {
+
+        y_pred = predict(x_test[i]);
+
+        equal = true;
+
+        for (int j = 0; j < y_pred.size(); j++) {
+
+            if (y_pred[j] != y_test[i][j]) {
+
+                equal = false;
+                break;
+            }
+        }
+
+        if (equal)
+            accuracy += 1;
+
+    }
+
+    accuracy /= y_test.size();
 }
 
 void Network::printWeights(){
@@ -234,6 +270,16 @@ void Network::printWeights(){
 vector<Layer> Network::getLayers(){
 
     return layers;
+}
+
+vector<double> Network::getTrainingLoss(){
+
+    return training_loss;
+}
+
+double Network::getAccuracy(){
+
+    return accuracy;
 }
 
 // Setters
