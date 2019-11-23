@@ -27,6 +27,7 @@ public:
     // Constructor
 
     Neuron(int num_inputs_p, bool use_constant_weight, double constant_weight, string activation_function_p);
+    Neuron(int num_inputs_p, vector<double> weights_p, double bias_p, string activation_function_p);
 
     // Methods
 

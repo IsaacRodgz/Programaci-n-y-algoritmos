@@ -200,7 +200,7 @@ void test_MLP(){
     // Split 80% train and 20% test
 
     // Generate x_train, x_test
-    /*
+
     double train_pecentage = 0.8;
 
     int index = int(x.size()*train_pecentage);
@@ -222,38 +222,50 @@ void test_MLP(){
     first = y.begin() + index;
     last = y.end();
     vector<vector<double> > y_test(first, last);
-    */
+
     // Build and Train model
 
-    Network model = Network();
+    double learning_rate = 0.0001;
 
+    Network model = Network(learning_rate);
+    /*
     model.addData(4);
     model.addDense(5, "relu");
-    //model.addDense(4, "relu");
     model.addOutput(1, "sigmoid");
 
-    model.compile("sgd", "cross_entropy", "accuracy", 0.0001);
+    int num_epochs = 6000;
+    int batch_size = 50;
 
-    model.fit(x, y, 6000, 50);
+    model.fit(x_train, y_train, num_epochs, batch_size);
 
-    model.eval(x, y);
+    model.eval(x_test, y_test);
 
-    cout << "\n\nAccuracy: " << model.getAccuracy() << "\n" << endl;
+    cout << "\n\nTest Accuracy: " << model.getAccuracy() << "\n" << endl;
 
     vector<double> trainingLoss = model.getTrainingLoss();
 
-    /*
-    for (int i = 0; i < trainingLoss.size(); i++) {
+    // Filter nan and inf values of cross_entropy cost function
 
-        cout << i << " " << trainingLoss[i] << endl;
-    }
+    vector<double> trainingLoss_plot;
+    copy_if (trainingLoss.begin(), trainingLoss.end(), back_inserter(trainingLoss_plot), [](double i){return !isnan(i) && !isinf(i);} );
+
+    // Filter first epoch cost values for better visualization of cost graph
+
+    vector<double>::const_iterator first_p = trainingLoss_plot.begin() + 30;
+    vector<double>::const_iterator last_p = trainingLoss_plot.end();
+    vector<double> trainingLoss_plot_f(first_p, last_p);
+
+    plot(trainingLoss_plot_f);
+
+    model.save();
     */
 
-    //vector<double>::const_iterator first_p = trainingLoss.begin() + 50;
-    //vector<double>::const_iterator last_p = trainingLoss.end();
-    //vector<double> trainingLoss_plot(first_p, last_p);
+    model.load();
 
-    plot(trainingLoss);
+    model.eval(x, y);
+
+    cout << "\n\nTest Accuracy: " << model.getAccuracy() << "\n" << endl;
+
 }
 
 int main(int argc, char const *argv[]) {

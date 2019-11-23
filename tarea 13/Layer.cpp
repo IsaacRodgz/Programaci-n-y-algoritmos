@@ -16,6 +16,10 @@ Layer::Layer(int input_size_p, int output_size_p, string activation_function_p) 
     }
 }
 
+Layer::Layer(int input_size_p, int output_size_p, vector<Neuron> units_p, string activation_function_p) :
+    input_size(input_size_p), output_size(output_size_p), activation_function(activation_function_p),
+    units(units_p) {}
+
 // Methods
 
 void Layer::activateLayer(vector<double> &input){
@@ -81,3 +85,18 @@ string Layer::getActivationFunction(){
 }
 
 // Setters
+
+void Layer::setInputSize(int input_size_p){
+
+    input_size = input_size_p;
+}
+
+void Layer::setOutputSize(int output_size_p){
+
+    output_size = output_size_p;
+}
+
+void Layer::setActivationFunction(string activation_function_p){
+
+    activation_function = activation_function_p;
+}

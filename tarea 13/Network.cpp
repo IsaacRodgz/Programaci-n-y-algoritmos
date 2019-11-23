@@ -5,12 +5,17 @@
 
 #include <math.h>
 #include <bits/stdc++.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
 // Constructor
 
-Network::Network() : input_size(0), output_size(0), num_layers(0) {}
+Network::Network(double learning_rate_p) :
+    input_size(0), output_size(0), num_layers(0), learning_rate(learning_rate_p) {}
 
 // Methods
 
@@ -41,14 +46,6 @@ void Network::addOutput(int num_outputs, string activation_function){
     layers.push_back(Layer(layers[num_layers-1].getOutputSize(), num_outputs, activation_function));
 
     num_layers++;
-}
-
-void Network::compile(string optimizer_p, string loss_p, string metric_p, double learning_rate_p){
-
-    optimizer = optimizer_p;
-    loss = loss_p;
-    metric = metric_p;
-    learning_rate = learning_rate_p;
 }
 
 vector<double> Network::predict(vector<double> &input){
@@ -202,24 +199,34 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
     double epoch_loss;
     vector<double> y_hat;
 
+    // For each epoch
+
     for (size_t e = 0; e < epochs; e++) {
 
         epoch_loss = 0;
+
+        // For each example in training set
 
         for (int i = 0; i < x.size(); i++) {
 
             double current_loss = 0;
 
+            // Calculate prediction of MLP
+
             forward(x[i]);
+
+            // Get prediction vector y_hat
 
             for (int j = 0; j < layers[num_layers-1].getOutputSize(); j++) {
 
                 y_hat = layers[num_layers-1].getActivatedOutput();
 
-                current_loss += meanSquaredCost(y[i][j], y_hat[j]);
+                current_loss += crossEntropyCost(y[i][j], y_hat[j]);
             }
 
             epoch_loss += current_loss;
+
+            // Update weights with batch gradient descent
 
             updateWeights(x[i], y[i], batch_size);
         }
@@ -288,6 +295,151 @@ void Network::printWeights(){
         }
 
         cout << "\n";
+    }
+}
+
+void Network::save(){
+
+    // Creating a directory
+    mkdir("model", 0777);
+
+    ofstream file;
+    file.open("model/weights");
+
+    for (int k = 0; k < layers.size(); k++) {
+
+        file << layers[k].getOutputSize() <<  " " << layers[k].getInputSize() << endl;
+
+        for (int i = 0; i < layers[k].getOutputSize(); i++) {
+
+            for (int j = 0; j < layers[k].getInputSize(); j++) {
+
+                file << layers[k].getUnits()[i].getWeights()[j] << " ";
+            }
+
+                // Save bias at the end of the weights of each line (neuron)
+
+            file << layers[k].getUnits()[i].getBias();
+
+            file << "\n";
+        }
+
+        file << "\n";
+    }
+
+    file.close();
+
+    // Save network and layers info
+
+    file.open("model/params");
+
+    file << num_layers << endl;
+    file << learning_rate << endl;
+
+    for (int k = 0; k < layers.size(); k++) {
+
+        file << layers[k].getActivationFunction() << endl;
+    }
+
+    file.close();
+}
+
+void Network::load(){
+
+    ifstream file;
+    string line;
+
+    // Load network and layers info
+
+    file.open("model/params");
+
+    string activation_function_s;
+    vector<string> activation_function_v;
+
+    getline(file, line);
+    stringstream ss1(line);
+    ss1 >> num_layers;
+
+    getline(file, line);
+    stringstream ss2(line);
+    ss2 >> learning_rate;
+
+    cout << "Num layers: " << num_layers << endl;
+    cout << "Num Learning rate: " << learning_rate << endl;
+
+    for (int k = 0; k < num_layers; k++) {
+
+        getline(file, line);
+        stringstream ss3(line);
+        ss3 >> activation_function_s;
+        activation_function_v.push_back(activation_function_s);
+        cout << "Activation function: " << activation_function_s << endl;
+    }
+
+    file.close();
+
+    // Load network weights
+
+    file.open("model/weights");
+
+    // Read weights by layer
+
+    for (size_t k = 0; k < num_layers; k++) {
+
+        // Get layer input and output size
+
+        double input_size_p;
+        double output_size_p;
+
+        getline(file, line);
+        stringstream ss3(line);
+        ss3 >> output_size_p >> input_size_p;
+
+        cout << "\nLayer input size: " << input_size_p << endl;
+        cout << "\nLayer output size: " << output_size_p << "\n" << endl;
+
+        // Read each line (neuron) of layer k
+
+        double num_neurons_read = 0;
+        vector<Neuron> units_p;
+
+        while ( getline(file, line) ) {
+
+            vector<double> weights_p;
+            double bias_p;
+
+            stringstream ss4(line);
+            string token;
+            double current_col = 0;
+            num_neurons_read++;
+
+            cout << "\nRead neuron: " << num_neurons_read << endl;
+
+            while(getline(ss4, token, ' ')){
+
+                if (current_col++ < input_size_p) {
+
+                    cout << "Weight: " << token << endl;
+                    weights_p.push_back(stod(token));
+                }
+
+                else{
+
+                    cout << "Bias: " << token << endl;
+                    bias_p = stod(token);
+                }
+            }
+
+            units_p.push_back(Neuron(input_size_p, weights_p, bias_p, activation_function_v[k]));
+
+            if (num_neurons_read == output_size_p) {
+                break;
+            }
+        }
+
+        layers.push_back(Layer(input_size_p, output_size_p, units_p, activation_function_v[k]));
+        cout << "\nGet next Layer\n" << endl;
+        getline(file, line);
     }
 }
 

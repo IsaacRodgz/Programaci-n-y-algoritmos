@@ -16,20 +16,15 @@ private:
     int output_size;
     int num_layers;
     vector<Layer> layers;
-    string optimizer;
-    string loss;
-    string metric;
     double learning_rate;
     vector<double> training_loss;
     double accuracy;
-    double precision;
-    double recall;
 
 public:
 
     // Constructor
 
-    Network();
+    Network(double learning_rate_p);
 
     // Methods
 
@@ -38,8 +33,6 @@ public:
     void addDense(int num_neurons, string activation_function);
 
     void addOutput(int num_outputs, string activation_function);
-
-    void compile(string optimizer_p, string loss_p, string metric_p, double learning_rate_p);
 
     vector<double> predict(vector<double> &input);
 
@@ -56,6 +49,10 @@ public:
     void eval(vector<vector<double> > x_test, vector<vector<double> > y_test);
 
     void printWeights();
+
+    void save();
+
+    void load();
 
     // Getters
 

@@ -22,6 +22,7 @@ public:
     // Constructor
 
     Layer(int input_size_p, int output_size_p, string activation_function_p);
+    Layer(int input_size_p, int output_size_p, vector<Neuron> units_p, string activation_function_p);
 
     // Methods
 
@@ -45,7 +46,11 @@ public:
 
     // Setters
 
+    void setInputSize(int input_size_p);
 
+    void setOutputSize(int output_size_p);
+
+    void setActivationFunction(string activation_function_p);
 
 };
 

@@ -16,6 +16,14 @@ Neuron::Neuron(int num_inputs_p, bool use_constant_weight,
         weight_initialization(use_constant_weight, constant_weight);
     }
 
+Neuron::Neuron(int num_inputs_p, vector<double> weights_p, double bias_p, string activation_function_p) :
+    num_inputs(num_inputs_p), bias(bias_p), activation_function(activation_function_p),
+    num_iters(0.0), batch_count(0), batch_gradient(0.0), weights(weights_p) {
+
+        average_v.resize(num_inputs, 0.0);
+        batch_gradient.resize(num_inputs, 0.0);
+    }
+
 // Methods
 
 void Neuron::weight_initialization(bool use_constant_weight, double constant_weight) {
