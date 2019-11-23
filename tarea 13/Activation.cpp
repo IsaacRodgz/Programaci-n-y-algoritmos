@@ -29,7 +29,10 @@ double Activation::activateDerivative(string activation_function, double inner_p
 
     if ( activation_function == "relu" ) {
 
-        // TODO
+        if ( inner_product < 0.0 )
+            return 0.0;
+        else
+            return 1.0;
     }
 
     else if ( activation_function == "sigmoid" ) {

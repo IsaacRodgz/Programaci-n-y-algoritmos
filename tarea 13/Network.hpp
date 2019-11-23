@@ -47,7 +47,9 @@ public:
 
     double crossEntropyCost(double y, double y_hat);
 
-    void updateWeights(vector<double> x, vector<double> y);
+    double meanSquaredCost(double y, double y_hat);
+
+    void updateWeights(vector<double> x, vector<double> y, int batch_size);
 
     void fit(vector<vector<double> > x, vector<vector<double> > y, int epochs, int batch_size);
 

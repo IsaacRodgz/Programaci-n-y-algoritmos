@@ -10,7 +10,8 @@ using namespace std;
 
 Neuron::Neuron(int num_inputs_p, bool use_constant_weight,
     double constant_weight, string activation_function_p) :
-    num_inputs(num_inputs_p), bias(0.0), activation_function(activation_function_p) {
+    num_inputs(num_inputs_p), bias(1.0), activation_function(activation_function_p),
+    num_iters(0.0), batch_count(0), batch_gradient(0.0) {
 
         weight_initialization(use_constant_weight, constant_weight);
     }
@@ -30,6 +31,10 @@ void Neuron::weight_initialization(bool use_constant_weight, double constant_wei
         generate(weights.begin(), weights.end(), gen);
 
     }
+
+    average_v.resize(num_inputs, 0.0);
+
+    batch_gradient.resize(num_inputs, 0.0);
 }
 
 double Neuron::gen(){
@@ -55,11 +60,30 @@ void Neuron::activateNeuron(vector<double> &input){
     activated_output_derivative = Activation::activateDerivative(activation_function, weighted_output);
 }
 
-void Neuron::updateWeights(vector<double> &dz_dw, double delta, double learning_rate){
+void Neuron::updateWeights(vector<double> &dz_dw, double delta, double learning_rate, int batch_size){
+
+    batch_count++;
+    num_iters++;
 
     for (int i = 0; i < weights.size(); i++) {
 
-        weights[i] -= learning_rate*(dz_dw[i]*delta);
+        batch_gradient[i] += (dz_dw[i]*delta);
+
+        if ( batch_count%batch_size == 0 ) {
+
+            batch_gradient[i] = batch_gradient[i]/double(batch_size);
+
+            double beta = 0.3;
+
+            average_v[i] = beta*average_v[i] + (1-beta)*batch_gradient[i];
+            //average_v = average_v/(1-pow(beta, num_iters));
+
+            weights[i] -= learning_rate*average_v[i];
+
+            batch_gradient[i] = 0;
+        }
+
+        //weights[i] -= learning_rate*average_v[i];
         bias -= learning_rate*delta;
     }
 }

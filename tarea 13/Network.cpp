@@ -97,9 +97,18 @@ double Network::crossEntropyCost(double y, double y_hat){
     return -(y*log(y_hat) + (1-y)*log(1-y_hat));
 }
 
-void Network::updateWeights(vector<double> x, vector<double> y){
+double Network::meanSquaredCost(double y, double y_hat){
+
+    return 0.5*(y-y_hat)*(y-y_hat);
+}
+
+void Network::updateWeights(vector<double> x, vector<double> y, int batch_size){
 
     vector<double> delta = {};
+
+    /*
+    Update last layer weights
+    */
 
     // delta at output layer
 
@@ -109,18 +118,18 @@ void Network::updateWeights(vector<double> x, vector<double> y){
         delta.push_back(delta_l);
     }
 
-    // Update last layer weights
-
     /*
-        dC/dW^L = dz/dW^L * delta_L = a^(l-1) * delta_(l+1)
+        dC/dW^L = dz/dW^L * delta_L = a^(l-1) * delta_L
 
         dC/db^L = delta_L
     */
 
     vector<double> dz_dw = layers[num_layers-2].getActivatedOutput();
-    layers[num_layers-1].updateWeights(dz_dw, delta, learning_rate);
+    layers[num_layers-1].updateWeights(dz_dw, delta, learning_rate, batch_size);
 
-    // Update hidden layers weights
+    /*
+    Update hidden layers weights
+    */
 
     vector<Neuron> l_front;
     vector<double> delta_temp;
@@ -141,11 +150,21 @@ void Network::updateWeights(vector<double> x, vector<double> y){
             dz_dw = layers[i-1].getActivatedOutput();
         }
 
-        // Update delta_l
+        /*
+        Update delta_l
+
+        delta_l = dC/dz^(l+1) * dz^(l+1)/da^(l) * da^(l)/dz^(l)
+
+        * dz^(l+1)/da^(l) = w^(l+1)                -> matriz of weights of layer l+1
+        * da^(l)/dz^(l) = sigmoid_prime(z^(l))     -> vector of derivative of activation function evaluated at z^(l)
+        * dC/dz^(l+1) = delta_(l+1)                -> vector delta of layer l+1
+
+        */
 
         delta_temp.resize(layers[i].getOutputSize(), 0.0);
 
-        // Get weights of layer l+1
+        // Calculate matrix-vector product dz^(l+1)/da^(l) * dC/dz^(l+1)
+        // dz^(l+1)/da^(l) * dC/dz^(l+1) = w^(l+1) * delta_(l+1) = delta_temp
 
         l_front = layers[i+1].getUnits();
 
@@ -156,6 +175,9 @@ void Network::updateWeights(vector<double> x, vector<double> y){
                 delta_temp[k] += l_front[j].getWeights()[k] * delta[j];
             }
         }
+
+        // Calculate delta_l = delta_temp * da^(l)/dz^(l) (element-wise product of vectors)
+        // delta_l = delta_temp * sigmoid_prime(z^(l))
 
         activate_prime = layers[i].getActivatedOutputDerivative();
 
@@ -168,23 +190,21 @@ void Network::updateWeights(vector<double> x, vector<double> y){
 
         // Update weights
 
-        layers[i].updateWeights(dz_dw, delta, learning_rate);
+        layers[i].updateWeights(dz_dw, delta, learning_rate, batch_size);
 
     }
 }
 
 void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epochs, int batch_size){
 
-    // MSE calculated for each iteration
-
+    double learning_rate0 = learning_rate;
+    double learning_step = 0;
     double epoch_loss;
     vector<double> y_hat;
 
     for (size_t e = 0; e < epochs; e++) {
 
         epoch_loss = 0;
-
-        //cout << "\nEpoch " << e+1 << "\n" << endl;
 
         for (int i = 0; i < x.size(); i++) {
 
@@ -196,21 +216,27 @@ void Network::fit(vector<vector<double> > x, vector<vector<double> > y, int epoc
 
                 y_hat = layers[num_layers-1].getActivatedOutput();
 
-                current_loss += crossEntropyCost(y[i][j], y_hat[j]);
+                current_loss += meanSquaredCost(y[i][j], y_hat[j]);
             }
 
             epoch_loss += current_loss;
 
-            updateWeights(x[i], y[i]);
+            updateWeights(x[i], y[i], batch_size);
         }
 
         epoch_loss /= x.size();
 
         training_loss.push_back(epoch_loss);
 
-        //cout << "\nCost: " << epoch_loss << "\n" << endl;
+        if( e%100 == 0 ){
 
-        //cout << "\n" << endl;
+            cout << "\nEpoch: " << e << endl;
+            cout << "\nCost: " << epoch_loss << endl;
+            //learning_step++;
+            //learning_rate = learning_rate0 * exp(-0.1*(learning_step+1));
+            //cout << "\nlearning_rate: " << learning_rate << endl;
+            cout << "\n----------------------------------------------------" << endl;
+        }
     }
 }
 

@@ -17,6 +17,10 @@ protected:
     double weighted_output;
     double activated_output;
     double activated_output_derivative;
+    vector<double> average_v;
+    double num_iters;
+    int batch_count;
+    vector<double> batch_gradient;
 
 public:
 
@@ -34,7 +38,7 @@ public:
 
     void activateNeuron(vector<double> &input);
 
-    void updateWeights(vector<double> &dz_dw, double delta, double learning_rate);
+    void updateWeights(vector<double> &dz_dw, double delta, double learning_rate, int batch_size);
 
     // Getters
 

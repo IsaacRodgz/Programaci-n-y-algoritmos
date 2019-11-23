@@ -32,8 +32,8 @@ void plot(vector<double> x){
     double xmax = x.size()-1;
     double xmin = 0;
 
-    double ymax = *min_element(x.begin(), x.end());
-    double ymin = *max_element(x.begin(), x.end());
+    double ymax = *max_element(x.begin(), x.end());
+    double ymin = *min_element(x.begin(), x.end());
 
     double ejex = w - w/8;
     double ejey = h/8;
@@ -81,19 +81,6 @@ void plot(vector<double> x){
         cairo_stroke(cr);
     }
 
-    // Labels
-
-    /*
-    vector<string> metricax;
-
-    for (size_t i = 0; i < 11; i++) {
-
-        metricay.push_back(to_string(double(i)/10));
-    }
-
-    metricay[i].c_str();
-    */
-
     // x labels
 
     double xstep = (xmax - xmin)/10;
@@ -122,7 +109,7 @@ void plot(vector<double> x){
         cairo_move_to(cr, (origenx - 30), (origeny-(metrica_ejey*i)));
         cairo_save(cr);
         cairo_rotate(cr, -45.0);
-        cairo_show_text(cr, to_string(-ystep*i).c_str());
+        cairo_show_text(cr, to_string(ymin+ystep*i).c_str());
         cairo_restore(cr);
     }
 
@@ -140,10 +127,10 @@ void plot(vector<double> x){
     for (int i = 0; i < x.size(); i++) {
 
         double valx = origenx + ((ejex-origenx)/(xmax-xmin))*i;
-        double valy = ejey - ((origeny-ejey)/(ymax-ymin))*(x[i]-ymin);
+        double valy = ejey + ((origeny-ejey)/(ymin-ymax))*(x[i]-ymax);
 
         cairo_set_source_rgb(cr, 0.69, 0.19, 0.0);
-        cairo_arc(cr, valx, valy, 1.5, 0, 2*PI);
+        cairo_arc(cr, valx, valy, 1.0, 0, 2*PI);
         cairo_fill(cr);
         cairo_stroke(cr);
     }

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-// g++ -std=c++11 -lcairo Activation.cpp Neuron.cpp Layer.cpp Network.cpp Data.cpp Graph.cpp test.cpp -o test && ./test
+// g++ -std=c++11 Activation.cpp Neuron.cpp Layer.cpp Network.cpp Data.cpp Graph.cpp test.cpp -o test -lcairo && ./test
 
 void test_MLP(){
 
@@ -200,7 +200,7 @@ void test_MLP(){
     // Split 80% train and 20% test
 
     // Generate x_train, x_test
-
+    /*
     double train_pecentage = 0.8;
 
     int index = int(x.size()*train_pecentage);
@@ -222,32 +222,36 @@ void test_MLP(){
     first = y.begin() + index;
     last = y.end();
     vector<vector<double> > y_test(first, last);
-
+    */
     // Build and Train model
 
     Network model = Network();
 
     model.addData(4);
-    model.addDense(8, "sigmoid");
-    model.addDense(4, "sigmoid");
+    model.addDense(5, "relu");
+    //model.addDense(4, "relu");
     model.addOutput(1, "sigmoid");
 
     model.compile("sgd", "cross_entropy", "accuracy", 0.0001);
 
-    model.fit(x_train, y_train, 10000, 1);
+    model.fit(x, y, 6000, 50);
 
-    model.eval(x_train, y_train);
+    model.eval(x, y);
 
     cout << "\n\nAccuracy: " << model.getAccuracy() << "\n" << endl;
 
-    /*
     vector<double> trainingLoss = model.getTrainingLoss();
 
+    /*
     for (int i = 0; i < trainingLoss.size(); i++) {
 
         cout << i << " " << trainingLoss[i] << endl;
     }
     */
+
+    //vector<double>::const_iterator first_p = trainingLoss.begin() + 50;
+    //vector<double>::const_iterator last_p = trainingLoss.end();
+    //vector<double> trainingLoss_plot(first_p, last_p);
 
     plot(trainingLoss);
 }

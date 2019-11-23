@@ -27,7 +27,7 @@ public:
 
     void activateLayer(vector<double> &input);
 
-    void updateWeights(vector<double> &dz_dw, vector<double> &delta, double learning_rate);
+    void updateWeights(vector<double> &dz_dw, vector<double> &delta, double learning_rate, int batch_size);
 
     // Getters
 

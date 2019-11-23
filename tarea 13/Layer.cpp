@@ -26,11 +26,11 @@ void Layer::activateLayer(vector<double> &input){
     }
 }
 
-void Layer::updateWeights(vector<double> &dz_dw, vector<double> &delta, double learning_rate){
+void Layer::updateWeights(vector<double> &dz_dw, vector<double> &delta, double learning_rate, int batch_size){
 
     for (int i = 0; i < units.size(); i++) {
 
-        units[i].updateWeights(dz_dw, delta[i], learning_rate);
+        units[i].updateWeights(dz_dw, delta[i], learning_rate, batch_size);
     }
 }
 
