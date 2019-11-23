@@ -364,8 +364,8 @@ void Network::load(){
     stringstream ss2(line);
     ss2 >> learning_rate;
 
-    cout << "Num layers: " << num_layers << endl;
-    cout << "Num Learning rate: " << learning_rate << endl;
+    //cout << "Num layers: " << num_layers << endl;
+    //cout << "Num Learning rate: " << learning_rate << endl;
 
     for (int k = 0; k < num_layers; k++) {
 
@@ -373,7 +373,7 @@ void Network::load(){
         stringstream ss3(line);
         ss3 >> activation_function_s;
         activation_function_v.push_back(activation_function_s);
-        cout << "Activation function: " << activation_function_s << endl;
+        //cout << "Activation function: " << activation_function_s << endl;
     }
 
     file.close();
@@ -395,8 +395,8 @@ void Network::load(){
         stringstream ss3(line);
         ss3 >> output_size_p >> input_size_p;
 
-        cout << "\nLayer input size: " << input_size_p << endl;
-        cout << "\nLayer output size: " << output_size_p << "\n" << endl;
+        //cout << "\nLayer input size: " << input_size_p << endl;
+        //cout << "\nLayer output size: " << output_size_p << "\n" << endl;
 
         // Read each line (neuron) of layer k
 
@@ -413,19 +413,19 @@ void Network::load(){
             double current_col = 0;
             num_neurons_read++;
 
-            cout << "\nRead neuron: " << num_neurons_read << endl;
+            //cout << "\nRead neuron: " << num_neurons_read << endl;
 
             while(getline(ss4, token, ' ')){
 
                 if (current_col++ < input_size_p) {
 
-                    cout << "Weight: " << token << endl;
+                    //cout << "Weight: " << token << endl;
                     weights_p.push_back(stod(token));
                 }
 
                 else{
 
-                    cout << "Bias: " << token << endl;
+                    //cout << "Bias: " << token << endl;
                     bias_p = stod(token);
                 }
             }
@@ -438,7 +438,7 @@ void Network::load(){
         }
 
         layers.push_back(Layer(input_size_p, output_size_p, units_p, activation_function_v[k]));
-        cout << "\nGet next Layer\n" << endl;
+        //cout << "\nGet next Layer\n" << endl;
         getline(file, line);
     }
 }
