@@ -81,7 +81,7 @@ void Neuron::updateWeights(vector<double> &dz_dw, double delta, double learning_
 
             batch_gradient[i] = batch_gradient[i]/double(batch_size);
 
-            double beta = 0.3;
+            double beta = 0.9;
 
             average_v[i] = beta*average_v[i] + (1-beta)*batch_gradient[i];
             //average_v = average_v/(1-pow(beta, num_iters));
