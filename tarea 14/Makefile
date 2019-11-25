@@ -1,6 +1,6 @@
 all:
 
-	g++ -std=c++11 Point.cpp Geom.cpp test.cpp -o test
+	g++ -std=c++11 Point.cpp Geom.cpp test.cpp -o test -lcairo
 
 clean:
 

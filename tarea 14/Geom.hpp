@@ -28,13 +28,9 @@ public:
 
     void convexHull();
 
-    // Getters
+    void convexHullGraham();
 
-    
-
-    // Setters
-
-
+    void plot();
 
 };
 
