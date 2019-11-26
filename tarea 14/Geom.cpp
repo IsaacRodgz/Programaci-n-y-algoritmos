@@ -44,12 +44,10 @@ void Geom::printPoints(){
 
 void Geom::printConvexHull(){
 
-    for (int i = 0; i < convex_hull.size(); i++) {
+    for (int i = 0; i < convex_hull_points.size(); i++) {
 
-        int next = convex_hull[i];
-
-        double x = points[next].getX();
-        double y = points[next].getY();
+        double x = convex_hull_points[i].getX();
+        double y = convex_hull_points[i].getY();
 
         cout << "x: " << x << "    " << "y: " << y << endl;
     }
@@ -66,7 +64,23 @@ double Geom::det(int p, int q, int r){
     return x1*y2 - y1*x2;
 }
 
+double Geom::det(Point p, Point q, Point r){
+
+    double x1 = p.getX();
+    double y1 = p.getY();
+
+    double x2 = q.getX();
+    double y2 = q.getY();
+
+    double x3 = r.getX();
+    double y3 = r.getY();
+
+    return x1*(y2-y3) - y1*(x2-x3) + (x2*y3-x3*y2);
+}
+
 void Geom::convexHull(){
+
+    vector<int> convex_hull_indexes;
 
     // Find min x point
 
@@ -86,7 +100,7 @@ void Geom::convexHull(){
 
     do {
 
-        convex_hull.push_back(p);
+        convex_hull_indexes.push_back(p);
 
         q = (p+1)%points.size();
 
@@ -104,32 +118,151 @@ void Geom::convexHull(){
 
     } while( p != minX );
 
-}
+    for (int i = 0; i < convex_hull_indexes.size(); i++) {
 
-bool cmp(Point a, Point b) {
-    return a.getX() < b.getX() || (a.getX() == b.getX() && a.getY() < b.getY());
+        convex_hull_points.push_back(points[convex_hull_indexes[i]]);
+    }
+
 }
 
 void Geom::convexHullGraham(){
 
-    // Find min y point
+    // Find initial point
 
-    int minY = 0;
+    int minPoint = initialPoint();
+
+    // Sort points by angle with respect the initial point
+
+    vector<Point> sortedPoints = sortAngle(minPoint);
+
+    // Iterate through ordered points
+
+    convex_hull_points.push_back(sortedPoints[0]);
+    convex_hull_points.push_back(sortedPoints[1]);
+    convex_hull_points.push_back(sortedPoints[2]);
+
+    for (int i = 2; i < sortedPoints.size()-1; i++) {
+
+        int index = convex_hull_points.size();
+        double det_val = det(convex_hull_points[index-3], convex_hull_points[index-2], convex_hull_points[index-1]);
+
+        if ( det_val >= 0 ) {
+
+            convex_hull_points.push_back(sortedPoints[i+1]);
+        }
+
+        else {
+
+            convex_hull_points.erase(convex_hull_points.end()-2);
+            index = convex_hull_points.size();
+
+            if (index > 2) {
+
+                det_val = det(convex_hull_points[index-3], convex_hull_points[index-2], convex_hull_points[index-1]);
+
+                while ( det_val < 0 && convex_hull_points.size() > 2 ) {
+
+                    convex_hull_points.erase(convex_hull_points.end()-2);
+                    index = convex_hull_points.size();
+                    det_val = det(convex_hull_points[index-3], convex_hull_points[index-2], convex_hull_points[index-1]);
+                }
+
+                convex_hull_points.push_back(sortedPoints[i+1]);
+            }
+        }
+    }
+}
+
+vector<Point> Geom::sortAngle(int minPoint){
+
+    // Calculate sin(theta)
+
+    vector<Point> pointsAngle;
 
     for (int i = 0; i < points.size(); i++) {
 
-        if ( points[minY].getY() > points[i].getY() ) {
-            minY = i;
+        double angle = calculateSinAngle(points[minPoint], points[i]);
+
+        if ( points[i].getX() < points[minPoint].getX() ) {
+
+            angle += 180;
+        }
+
+        pointsAngle.push_back(Point(points[i].getX(), points[i].getY(), angle));
+    }
+
+    pointsAngle.push_back(Point(points[minPoint].getX(), points[minPoint].getY(), 180));
+
+    // Sort
+
+    sort(pointsAngle.begin(), pointsAngle.end(), &cmp);
+
+    return pointsAngle;
+}
+
+bool Geom::cmp(Point a, Point b) {
+
+    return (a.getX() < b.getX() and a.getAngle() == b.getAngle()) or (a.getAngle() < b.getAngle());
+}
+
+double Geom::calculateSinAngle(Point p_min, Point p){
+
+    double a = p.getX() - p_min.getX();
+    double b = p.getY() - p_min.getY();
+
+    if(a == 0) {
+
+    	if(b == 0){
+
+    		return 0;
+        }
+
+    	else{
+
+    		return 90;
         }
     }
 
-    // Find remaining points
-
-
-
+    return atan(b/a)*57.2958;
 }
 
-void Geom::plot(){
+int Geom::initialPoint(){
+
+    int cuenta = 0;
+	int minIndex = 0;
+
+	for(int i = 0; i < points.size(); i++) {
+
+		if(points[i].getY() == points[minIndex].getY()){
+
+			cuenta++;
+        }
+
+		else if(points[i].getY() < points[minIndex].getY()) {
+
+			minIndex = i;
+			cuenta = 1;
+		}
+	}
+
+	if(cuenta > 1) {
+
+		for(int i = 0; i < points.size(); i++) {
+
+			if(points[i].getY() == points[minIndex].getY()) {
+
+				if(points[i].getX() < points[minIndex].getX()){
+
+					minIndex = i;
+                }
+			}
+		}
+	}
+
+	return minIndex;
+}
+
+void Geom::plot(string graph_title){
 
     int w = 500;
     int h = 500;
@@ -257,8 +390,7 @@ void Geom::plot(){
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, (ejey/3.0));
     cairo_move_to(cr, w/3.0, ejey/2.0);
-    string title = "Convex Hull Jarvis";
-    cairo_show_text(cr, title.c_str());
+    cairo_show_text(cr, graph_title.c_str());
 
     // Draw point
 
@@ -275,28 +407,21 @@ void Geom::plot(){
 
     // Draw convex hull
 
-    vector<Point> ch;
-
-    for (int i = 0; i < convex_hull.size(); i++) {
-
-        ch.push_back(points[convex_hull[i]]);
-    }
-
     cairo_set_source_rgba(cr, 0.2, 0.2, 0.8, 0.3);
 
-    for (size_t i = 0; i < ch.size(); i++) {
+    for (size_t i = 0; i < convex_hull_points.size(); i++) {
 
-        double valx = origenx + ((ejex-origenx)/(xmax-xmin))*(ch[i].getX()-xmin);
-        double valy = ejey + ((origeny-ejey)/(ymin-ymax))*(ch[i].getY()-ymax);
+        double valx = origenx + ((ejex-origenx)/(xmax-xmin))*(convex_hull_points[i].getX()-xmin);
+        double valy = ejey + ((origeny-ejey)/(ymin-ymax))*(convex_hull_points[i].getY()-ymax);
 
         cairo_line_to(cr, valx, valy);
     }
-    double valx = origenx + ((ejex-origenx)/(xmax-xmin))*(ch[0].getX()-xmin);
-    double valy = ejey + ((origeny-ejey)/(ymin-ymax))*(ch[0].getY()-ymax);
+    double valx = origenx + ((ejex-origenx)/(xmax-xmin))*(convex_hull_points[0].getX()-xmin);
+    double valy = ejey + ((origeny-ejey)/(ymin-ymax))*(convex_hull_points[0].getY()-ymax);
     cairo_line_to(cr, valx, valy);
     cairo_stroke(cr);
 
-    cairo_surface_write_to_png(surface, "convexHull.png");
+    cairo_surface_write_to_png(surface, (graph_title+".png").c_str());
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
 

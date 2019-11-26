@@ -12,12 +12,15 @@ private:
 
     double x;
     double y;
+    double angle;
 
 public:
 
     // Constructor
 
     Point(double x_p, double y_p);
+
+    Point(double x_p, double y_p, double angle_p);
 
     // Methods
 
@@ -29,9 +32,11 @@ public:
 
     double getY();
 
+    double getAngle();
+
     // Setters
 
-
+    void setAngle(double angle_p);
 
 };
 

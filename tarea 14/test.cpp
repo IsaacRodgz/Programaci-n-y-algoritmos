@@ -12,19 +12,13 @@ void test_ConvexHull(){
 
     g.readPoints("data.txt");
 
-    //g.printPoints();
-    /*
     g.convexHull();
 
-    //cout << "\nConvex hull: \n" << endl;
+    g.plot("Jarvis Convex Hull");
 
-    //g.printConvexHull();
+    //g.convexHullGraham();
 
-    cout << endl;
-
-    g.plot();
-    */
-    g.convexHullGraham();
+    //g.plot("Graham Convex Hull");
 
 }
 

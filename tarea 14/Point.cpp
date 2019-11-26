@@ -7,9 +7,10 @@ using namespace std;
 
 // Constructor
 
-Point::Point(double x_p, double y_p) : x(x_p), y(y_p) {}
+Point::Point(double x_p, double y_p) : x(x_p), y(y_p), angle(0) {}
+Point::Point(double x_p, double y_p, double angle_p) : x(x_p), y(y_p), angle(angle_p) {}
 
-// Methods
+// Getters
 
 double Point::getX(){
 
@@ -19,4 +20,16 @@ double Point::getX(){
 double Point::getY(){
 
     return y;
+}
+
+double Point::getAngle(){
+
+    return angle;
+}
+
+// Setters
+
+void Point::setAngle(double angle_p){
+
+    angle = angle_p;
 }

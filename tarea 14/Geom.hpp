@@ -12,7 +12,7 @@ class Geom {
 private:
 
     vector<Point> points;
-    vector<int> convex_hull;
+    vector<Point> convex_hull_points;
 
 public:
 
@@ -26,11 +26,21 @@ public:
 
     double det(int p, int q, int r);
 
+    double det(Point p, Point q, Point r);
+
     void convexHull();
 
     void convexHullGraham();
 
-    void plot();
+    vector<Point> sortAngle(int minPoint);
+
+    static bool cmp(Point a, Point b);
+
+    double calculateSinAngle(Point p_min, Point p);
+
+    int initialPoint();
+
+    void plot(string graph_title);
 
 };
 
