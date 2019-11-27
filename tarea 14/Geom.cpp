@@ -1,6 +1,7 @@
 #include <math.h>
 #include <bits/stdc++.h>
 #include <cairo.h>
+#include <time.h>
 
 #include "Point.hpp"
 #include "Geom.hpp"
@@ -135,6 +136,8 @@ double Geom::det(Point p, Point q, Point r){
 
 void Geom::convexHull(){
 
+    clock_t tStart = clock();
+
     vector<int> convex_hull_indexes;
 
     // Find min x point
@@ -178,9 +181,13 @@ void Geom::convexHull(){
         convex_hull_points.push_back(points[convex_hull_indexes[i]]);
     }
 
+    printf("\nTime taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
 }
 
 void Geom::convexHullGraham(){
+
+    clock_t tStart = clock();
 
     // Find initial point
 
@@ -225,6 +232,7 @@ void Geom::convexHullGraham(){
         convex_hull_points.push_back(sortedPoints[i]);
     }
 
+    printf("\nTime taken: %.2fs\n\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 }
 
 void Geom::sortAngle2(int minPointIndex){

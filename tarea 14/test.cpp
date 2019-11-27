@@ -6,24 +6,46 @@
 using namespace std;
 
 
-void test_ConvexHull(){
+void test_ConvexHull(int algo_type, int data_type){
 
     Geom g = Geom();
 
-    //g.readPoints("data.txt");
-    g.read_pgm("mano.pgm");
+    if (data_type == 1) {
 
-    //g.convexHull();
+        g.readPoints("data.txt");
+    }
 
-    //g.plot("Jarvis Convex Hull");
+    else {
 
-    g.convexHullGraham();
+        g.read_pgm("estrella.pgm");
+    }
 
-    g.plot("Graham Convex Hull");
+
+    if (algo_type == 1) {
+
+        g.convexHull();
+
+        g.plot("Jarvis Convex Hull");
+    }
+
+    else {
+
+        g.convexHullGraham();
+
+        g.plot("Graham Convex Hull");
+    }
 
 }
 
 int main(int argc, char const *argv[]) {
 
-    test_ConvexHull();
+    if(argc < 3){
+
+        cerr << "\nError: Missing arguments\n" << endl;
+    }
+
+    else{
+
+        test_ConvexHull(atoi(argv[1]), atoi(argv[2]));
+    }
 }
