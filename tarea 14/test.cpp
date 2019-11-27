@@ -10,15 +10,16 @@ void test_ConvexHull(){
 
     Geom g = Geom();
 
-    g.readPoints("data.txt");
+    //g.readPoints("data.txt");
+    g.read_pgm("mano.pgm");
 
-    g.convexHull();
+    //g.convexHull();
 
-    g.plot("Jarvis Convex Hull");
+    //g.plot("Jarvis Convex Hull");
 
-    //g.convexHullGraham();
+    g.convexHullGraham();
 
-    //g.plot("Graham Convex Hull");
+    g.plot("Graham Convex Hull");
 
 }
 

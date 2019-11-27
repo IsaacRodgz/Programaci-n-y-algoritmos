@@ -24,7 +24,11 @@ public:
 
     // Methods
 
-
+    bool operator < (Point p) {
+        if (y != p.y)
+            return y < p.y;
+        return x < p.x;
+    }
 
     // Getters
 

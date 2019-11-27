@@ -7,8 +7,63 @@
 # define PI 3.14159265359
 
 using namespace std;
+Point Geom::minPoint(0, 0);
 
 // Methods
+
+void Geom::read_pgm(const string image_file_name){
+
+    ifstream file(image_file_name);
+    string line;
+
+    // Verify version P2
+
+    getline(file, line);
+
+    if(line.compare("P2") != 0)
+        cerr << "Error: Not a P2 pgm image" << endl;
+
+    // Ignore coments
+
+    int width;
+    int height;
+
+    getline(file, line);
+
+    if(line.find("#") != string::npos){
+
+        getline(file, line);
+    }
+
+    stringstream ss(line);
+    ss >> width >> height;
+
+    // Ignore max value
+
+    getline(file, line);
+
+    // Create matrix
+
+    stringstream sst;
+    sst << file.rdbuf();
+
+    // Read image
+
+    for(int row = 0; row < height; ++row) {
+        for (int col = 0; col < width; ++col) {
+
+            double val;
+            sst >> val;
+
+            if (val > 0) {
+
+                points.push_back(Point(row, col));
+            }
+        }
+    }
+
+    file.close();
+}
 
 void Geom::readPoints(string data_file){
 
@@ -129,11 +184,25 @@ void Geom::convexHullGraham(){
 
     // Find initial point
 
-    int minPoint = initialPoint();
+    int minPointIndex = 0;
 
-    // Sort points by angle with respect the initial point
+    for (int i = 1; i < points.size(); i++) {
 
-    vector<Point> sortedPoints = sortAngle(minPoint);
+        if (points[i] < points[minPointIndex]){
+
+            minPointIndex = i;
+        }
+    }
+
+    // Point to calculate angles of all other points
+
+    minPoint = points[minPointIndex];
+
+    // Sort points by angle with respect to minPoint
+
+    sortedPoints = points;
+
+    sortAngle2(minPointIndex);
 
     // Iterate through ordered points
 
@@ -141,125 +210,67 @@ void Geom::convexHullGraham(){
     convex_hull_points.push_back(sortedPoints[1]);
     convex_hull_points.push_back(sortedPoints[2]);
 
-    for (int i = 2; i < sortedPoints.size()-1; i++) {
+    for (int i = 3; i < sortedPoints.size(); i++) {
 
-        int index = convex_hull_points.size();
-        double det_val = det(convex_hull_points[index-3], convex_hull_points[index-2], convex_hull_points[index-1]);
+        Point top = convex_hull_points.back();
+        convex_hull_points.pop_back();
 
-        if ( det_val >= 0 ) {
+        while ( cross_product(convex_hull_points.back(), top, sortedPoints[i]) != -1 ) {
 
-            convex_hull_points.push_back(sortedPoints[i+1]);
+            top = convex_hull_points.back();
+            convex_hull_points.pop_back();
         }
 
-        else {
-
-            convex_hull_points.erase(convex_hull_points.end()-2);
-            index = convex_hull_points.size();
-
-            if (index > 2) {
-
-                det_val = det(convex_hull_points[index-3], convex_hull_points[index-2], convex_hull_points[index-1]);
-
-                while ( det_val < 0 && convex_hull_points.size() > 2 ) {
-
-                    convex_hull_points.erase(convex_hull_points.end()-2);
-                    index = convex_hull_points.size();
-                    det_val = det(convex_hull_points[index-3], convex_hull_points[index-2], convex_hull_points[index-1]);
-                }
-
-                convex_hull_points.push_back(sortedPoints[i+1]);
-            }
-        }
-    }
-}
-
-vector<Point> Geom::sortAngle(int minPoint){
-
-    // Calculate sin(theta)
-
-    vector<Point> pointsAngle;
-
-    for (int i = 0; i < points.size(); i++) {
-
-        double angle = calculateSinAngle(points[minPoint], points[i]);
-
-        if ( points[i].getX() < points[minPoint].getX() ) {
-
-            angle += 180;
-        }
-
-        pointsAngle.push_back(Point(points[i].getX(), points[i].getY(), angle));
+        convex_hull_points.push_back(top);
+        convex_hull_points.push_back(sortedPoints[i]);
     }
 
-    pointsAngle.push_back(Point(points[minPoint].getX(), points[minPoint].getY(), 180));
-
-    // Sort
-
-    sort(pointsAngle.begin(), pointsAngle.end(), &cmp);
-
-    return pointsAngle;
 }
 
-bool Geom::cmp(Point a, Point b) {
+void Geom::sortAngle2(int minPointIndex){
 
-    return (a.getX() < b.getX() and a.getAngle() == b.getAngle()) or (a.getAngle() < b.getAngle());
+    Point temp = sortedPoints[0];
+    sortedPoints[0] = sortedPoints[minPointIndex];
+    sortedPoints[minPointIndex] = temp;
+
+    sort(sortedPoints.begin() + 1, sortedPoints.end(), angle_cmp);
 }
 
-double Geom::calculateSinAngle(Point p_min, Point p){
+bool Geom::angle_cmp(Point p, Point q){
 
-    double a = p.getX() - p_min.getX();
-    double b = p.getY() - p_min.getY();
+    int val = cross_product(minPoint, p, q);
 
-    if(a == 0) {
+    if (val == 0) {
 
-    	if(b == 0){
-
-    		return 0;
-        }
-
-    	else{
-
-    		return 90;
-        }
+        return norm(minPoint, p) < norm(minPoint, q);
     }
 
-    return atan(b/a)*57.2958;
+    return (val == -1);
 }
 
-int Geom::initialPoint(){
+int Geom::cross_product(Point p, Point q, Point r){
 
-    int cuenta = 0;
-	int minIndex = 0;
+    int val = (q.getX() - p.getX()) * (r.getY() - p.getY()) - (q.getY() - p.getY()) * (r.getX() - p.getX());
 
-	for(int i = 0; i < points.size(); i++) {
+    if (val > 0){
 
-		if(points[i].getY() == points[minIndex].getY()){
+        return -1;
+    }
 
-			cuenta++;
-        }
+    else if (val < 0){
 
-		else if(points[i].getY() < points[minIndex].getY()) {
+        return 1;
+    }
 
-			minIndex = i;
-			cuenta = 1;
-		}
-	}
+    return 0;
+}
 
-	if(cuenta > 1) {
+int Geom::norm(Point p, Point q){
 
-		for(int i = 0; i < points.size(); i++) {
+    int diff_x = p.getX() - q.getX();
+    int diff_y = p.getY() - q.getY();
 
-			if(points[i].getY() == points[minIndex].getY()) {
-
-				if(points[i].getX() < points[minIndex].getX()){
-
-					minIndex = i;
-                }
-			}
-		}
-	}
-
-	return minIndex;
+    return diff_x*diff_x + diff_y*diff_y;
 }
 
 void Geom::plot(string graph_title){
@@ -315,75 +326,7 @@ void Geom::plot(string graph_title){
     double ejey = h/8;
     double origenx = w/8;
     double origeny = h - h/8;
-    /*
-    cairo_set_source_rgb(cr, 0.2, 0.2, 0.6);
-    cairo_set_line_width(cr, 3.0);
 
-    // x axis
-
-    cairo_move_to(cr, origenx, origeny);
-    cairo_line_to(cr, ejex, origeny);
-
-    // y axis
-
-    cairo_move_to(cr, origenx, origeny);
-    cairo_line_to(cr, origenx, ejey);
-
-    // Draw axis
-
-    cairo_stroke(cr);
-
-    //Grid
-
-    double metrica_ejex = (ejex - origenx)/10.0;
-    double metrica_ejey = (origeny - ejey)/10.0;
-
-    for (int i = 01; i < 11; i++) {
-
-        cairo_set_source_rgb(cr, 0.4, 0.4, 0.4);
-        cairo_set_line_width(cr, 0.5);
-
-        cairo_move_to(cr, (origenx+(metrica_ejex*i)), origeny);
-        cairo_line_to(cr, (origenx+(metrica_ejex*i)), ejey);
-
-        cairo_move_to(cr, origenx, (ejey+(metrica_ejey*(i-1))));
-        cairo_line_to(cr, ejex, (ejey+(metrica_ejey*(i-1))));
-
-        cairo_stroke(cr);
-    }
-
-    // x labels
-
-    double xstep = (xmax - xmin)/10;
-
-    for (int i = 1; i < 11; i++) {
-
-        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-        cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-        cairo_set_font_size(cr, 10.0);
-        cairo_move_to(cr, (origenx+(metrica_ejex*i)), (origeny + 10));
-        cairo_save(cr);
-        cairo_rotate(cr, 45.0);
-        cairo_show_text(cr, to_string(int(xstep*i)).c_str());
-        cairo_restore(cr);
-    }
-
-    // y labels
-
-    double ystep = (ymax - ymin)/10;
-
-    for (int i = 0; i < 11; i++) {
-
-        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-        cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-        cairo_set_font_size(cr, 10.0);
-        cairo_move_to(cr, (origenx - 30), (origeny-(metrica_ejey*i)));
-        cairo_save(cr);
-        cairo_rotate(cr, -45.0);
-        cairo_show_text(cr, to_string(ystep*i).c_str());
-        cairo_restore(cr);
-    }
-    */
     // Nombre grafica
 
     cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
@@ -400,7 +343,7 @@ void Geom::plot(string graph_title){
         double valy = ejey + ((origeny-ejey)/(ymin-ymax))*(points[i].getY()-ymax);
 
         cairo_set_source_rgb(cr, 0.69, 0.19, 0.0);
-        cairo_arc(cr, valx, valy, 2.0, 0, 2*PI);
+        cairo_arc(cr, valx, valy, 1.0, 0, 2*PI);
         cairo_fill(cr);
         cairo_stroke(cr);
     }

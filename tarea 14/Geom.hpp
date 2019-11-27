@@ -13,12 +13,17 @@ private:
 
     vector<Point> points;
     vector<Point> convex_hull_points;
+    vector<Point> sortedPoints;
 
 public:
+
+    static Point minPoint;
 
     // Methods
 
     void readPoints(string data_file);
+
+    void read_pgm(const string image_file_name);
 
     void printPoints();
 
@@ -32,13 +37,13 @@ public:
 
     void convexHullGraham();
 
-    vector<Point> sortAngle(int minPoint);
+    void sortAngle2(int minPointIndex);
 
-    static bool cmp(Point a, Point b);
+    static bool angle_cmp(Point p, Point q);
 
-    double calculateSinAngle(Point p_min, Point p);
+    static int cross_product(Point p, Point q, Point r);
 
-    int initialPoint();
+    static int norm(Point p, Point q);
 
     void plot(string graph_title);
 
