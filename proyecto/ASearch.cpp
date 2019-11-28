@@ -5,11 +5,6 @@
 
 using namespace std;
 
-inline bool operator<(const Cell& c1, const Cell& c2) {
-
-    return c1.getRank() < c2.getRank();
-}
-
 // Constructor
 
 ASearch::ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p) : start_pos(start_pos_p), end_pos(end_pos_p) {
@@ -22,32 +17,95 @@ ASearch::ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p) : start_p
 
 void ASearch::search(vector<vector<int> > world){
 
+    frontier.resize(world.size(), vector<bool>(world[0].size(), false));
     closed.resize(world.size(), vector<bool>(world[0].size(), false));
+
+    //cout << "\n world dims: " << world.size() << " " << world[0].size() << "\n" << endl;
+    //cout << "\n frontier dims: " << frontier.size() << " " << frontier[0].size() << "\n" << endl;
+    //cout << "\n closed dims: " << closed.size() << " " << closed[0].size() << "\n" << endl;
 
     initCellState(world.size(), world[0].size());
 
+    int init_x = start_pos.first;
+    int init_y = start_pos.second;
+
+    open.push_back(&cell_state[init_x][init_y]);
+    frontier[init_x][init_y] = true;
+
+    make_heap(open.begin(), open.end());
+
+    int current_x;
+    int current_y;
+
     while( !open.empty() ){
 
-        // Remove lowest rank item from open
+        // Remove item with lowest f value from open
 
-        Cell current = open.top();open.pop();
-        int current_x = current.getX();
-        int current_y = current.getY();
+        Cell* current = open.front();
+        pop_heap(open.begin(), open.end());
+        open.pop_back();
+
+        current_x = (*current).getX();
+        current_y = (*current).getY();
 
         // Add current to closed set
 
+        //cout << "\nCurrent" << endl;
+        //cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
+
         closed[current_x][current_y] = true;
+
+        // Check if current is the goal
+
+        if ( current_x == end_pos.first and current_y == end_pos.second ) {
+
+            cout << "\n Goal found\n" << endl;
+            break;
+        }
 
         // Iterate thorugh neighbours of current
 
+        //cout << "\nNeighbours:" << endl;
+
         for (int i = 0; i < x_neighbours.size(); i++) {
 
-            int neigh_x = x_neighbours[i];
-            int neigh_y = y_neighbours[i];
+            int neigh_x = current_x + x_neighbours[i];
+            int neigh_y = current_y + y_neighbours[i];
 
-            double cost = current.getG() + 1.0;
+            // Check if neighbour is valid
 
+            if ( neigh_x >= 0 and neigh_x < world.size() and neigh_y >= 0 and neigh_y < world[0].size() and world[neigh_x][neigh_y] == 1 ) {
+
+                //cout << "\n Coords: " << neigh_x << " " << neigh_y << "\n" << endl;
+
+                double new_cost = (*current).getG() + 1.0;
+
+                if ( frontier[neigh_x][neigh_y] == false or new_cost < cell_state[neigh_x][neigh_y].getG()) {
+
+                    cell_state[neigh_x][neigh_y].setG(new_cost);
+
+                    double priority = new_cost + estimateH(cell_state[neigh_x][neigh_y]);
+
+                    cell_state[neigh_x][neigh_y].setParent(current_x, current_y);
+
+                    cell_state[neigh_x][neigh_y].setF(priority);
+
+                    open.push_back(&cell_state[neigh_x][neigh_y]);
+
+                    make_heap(open.begin(), open.end());
+
+                    frontier[neigh_x][neigh_y] = true;
+                }
+            }
         }
+    }
+
+    while ( current_x != start_pos.first and current_y != start_pos.second ) {
+
+        cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
+
+        current_x = cell_state[current_x][current_y].getParentX();
+        current_x = cell_state[current_x][current_y].getParentY();
     }
 }
 
@@ -68,7 +126,7 @@ void ASearch::initCellState(int x_size, int y_size){
     }
 }
 
-double ASearch::estimateH(Cell current, Cell neighbour){
+double ASearch::estimateH(Cell neighbour){
 
     // Euclidean distance
 

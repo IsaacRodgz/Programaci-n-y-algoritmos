@@ -12,33 +12,50 @@ private:
 
     pair<int, int> parent;
     pair<int, int> location;
-    double rank;
+    double f;
     double g;
     double h;
+
+    struct PCompare {
+      bool operator()(const Cell* c1, const Cell* c2) {
+        return (*c1).f < (*c2).f;
+      }
+    };
 
 public:
 
     // Constructor
 
-    Cell(int x_coord, int y_coord, double rank_p);
+    Cell(int x_coord, int y_coord, double f_p);
 
     // Methods
 
-
+    bool operator<(const Cell& c) const
+    {
+        return this->f < c.f;
+    }
 
     // Getters
 
-    double getRank() const;
+    double getF();
 
     double getG();
 
-    double getX();
+    int getX();
 
-    double getY();
+    int getY();
+
+    int getParentX();
+
+    int getParentY();
 
     // Setters
 
+    void setG(double new_cost);
 
+    void setF(double new_priority);
+
+    void setParent(int x_coord, int y_coord);
 
 };
 
