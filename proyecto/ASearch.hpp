@@ -1,46 +1,48 @@
-#ifndef POINT_HPP
-#define POINT_HPP
+#ifndef ASEARCH_HPP
+#define ASEARCH_HPP
 
 #include <bits/stdc++.h>
 #include <string.h>
+#include "Cell.hpp"
 
 using namespace std;
 
-class Point {
+class ASearch {
 
 private:
 
-    double x;
-    double y;
-    double angle;
+    priority_queue<Cell> open;
+    vector<vector<bool> > closed;
+    vector<vector<Cell> > cell_state;
+
+    pair<int, int> start_pos;
+    pair<int, int> end_pos;
+
+    vector<int> x_neighbours;
+    vector<int> y_neighbours;
+
 
 public:
 
     // Constructor
 
-    Point(double x_p, double y_p);
-
-    Point(double x_p, double y_p, double angle_p);
+    ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p);
 
     // Methods
 
-    bool operator < (Point p) {
-        if (y != p.y)
-            return y < p.y;
-        return x < p.x;
-    }
+    void search(vector<vector<int> > world);
+
+    void initCellState(int x_size, int y_size);
+
+    double estimateH(Cell current, Cell neighbour);
 
     // Getters
 
-    double getX();
 
-    double getY();
-
-    double getAngle();
 
     // Setters
 
-    void setAngle(double angle_p);
+
 
 };
 
