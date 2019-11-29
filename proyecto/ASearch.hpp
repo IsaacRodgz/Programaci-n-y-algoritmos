@@ -11,7 +11,7 @@ class ASearch {
 
 private:
 
-    vector<Cell*> open;
+    priority_queue<Cell> openList;
     vector<vector<bool> > closed;
     vector<vector<bool> > frontier;
     vector<vector<Cell> > cell_state;
@@ -32,9 +32,13 @@ public:
 
     void search(vector<vector<int> > world);
 
+    void searchTemp(vector<vector<int> > world);
+
     void initCellState(int x_size, int y_size);
 
     double estimateH(Cell neighbour);
+
+    void printPath();
 
     // Getters
 

@@ -19,7 +19,7 @@ Cell::Cell(int x_coord, int y_coord, double f_p) : f(f_p), g(0), h(0) {
 
 // Getters
 
-double Cell::getF(){
+double Cell::getF() const{
 
     return f;
 }

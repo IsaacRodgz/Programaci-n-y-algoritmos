@@ -5,6 +5,11 @@
 
 using namespace std;
 
+bool operator<(const Cell& c1, const Cell& c2) {
+
+    return c1.getF() > c2.getF();
+}
+
 // Constructor
 
 ASearch::ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p) : start_pos(start_pos_p), end_pos(end_pos_p) {
@@ -29,37 +34,34 @@ void ASearch::search(vector<vector<int> > world){
     int init_x = start_pos.first;
     int init_y = start_pos.second;
 
-    open.push_back(&cell_state[init_x][init_y]);
+    openList.push(cell_state[init_x][init_y]);
     frontier[init_x][init_y] = true;
-
-    make_heap(open.begin(), open.end());
 
     int current_x;
     int current_y;
 
     bool found = false;
 
-    while( !open.empty() ){
+    while( !openList.empty() ){
 
         // Remove item with lowest f value from open
 
-        Cell* current = open.front();
-        pop_heap(open.begin(), open.end());
-        open.pop_back();
+        Cell current = openList.top();
+        openList.pop();
 
-        current_x = (*current).getX();
-        current_y = (*current).getY();
+        current_x = current.getX();
+        current_y = current.getY();
 
         // Add current to closed set
 
-        cout << "\nCurrent" << endl;
-        cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
+        //cout << "\nCurrent" << endl;
+        //cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
 
         closed[current_x][current_y] = true;
 
         // Iterate thorugh neighbours of current
 
-        cout << "\nNeighbours:" << endl;
+        //cout << "\nNeighbours:" << endl;
 
         for (int i = 0; i < x_neighbours.size(); i++) {
 
@@ -68,24 +70,48 @@ void ASearch::search(vector<vector<int> > world){
 
             // Check if neighbour is valid
 
-            if ( neigh_x >= 0 and neigh_x < world.size() and neigh_y >= 0 and neigh_y < world[0].size() and world[neigh_x][neigh_y] == 1 ) {
+            if ( neigh_x >= 0 and neigh_x < world.size() and neigh_y >= 0 and neigh_y < world[0].size() and world[neigh_x][neigh_y] != 0 ) {
 
                 // Check if current is the goal
 
-                if ( current_x == end_pos.first and current_y == end_pos.second ) {
+                if ( neigh_x == end_pos.first and neigh_y == end_pos.second ) {
 
                     cell_state[neigh_x][neigh_y].setParent(current_x, current_y);
+
+                    current_x = neigh_x;
+                    current_y = neigh_y;
 
                     cout << "\n Goal found\n" << endl;
 
                     found = true;
                 }
 
-                double new_cost = (*current).getG() + 1.0;
+                // Goal found, break for cicle
+
+                if (found == true) {
+
+                    break;
+                }
+
+                // If movement is diagonal only penalization is moving from one cell to another
+
+                double new_cost;
+
+                if ( neigh_x != current_x and neigh_y != neigh_y ) {
+
+                    new_cost = current.getG() + 1.0;
+                }
+
+                // Else add penalization specific to neighbour cell
+
+                else {
+
+                    new_cost = current.getG() + world[neigh_x][neigh_y];
+                }
 
                 if ( frontier[neigh_x][neigh_y] == false or new_cost < cell_state[neigh_x][neigh_y].getG()) {
 
-                    cout << "\n Coords: " << neigh_x << " " << neigh_y << "\n" << endl;
+                    //cout << "\n Coords: " << neigh_x << " " << neigh_y << "\n" << endl;
 
                     cell_state[neigh_x][neigh_y].setG(new_cost);
 
@@ -95,50 +121,30 @@ void ASearch::search(vector<vector<int> > world){
 
                     cell_state[neigh_x][neigh_y].setF(priority);
 
-                    open.push_back(&cell_state[neigh_x][neigh_y]);
-
-                    push_heap(open.begin(), open.end());
+                    openList.push(cell_state[neigh_x][neigh_y]);
 
                     frontier[neigh_x][neigh_y] = true;
 
-                    cout << "  priority_new: " << priority << "\n" << endl;
+                    //cout << "\n Parent of: " << neigh_x << " " << neigh_y;
+                    //cout << "\n is : " << cell_state[neigh_x][neigh_y].getParentX() << " " << cell_state[neigh_x][neigh_y].getParentY() << endl;
 
-                    for (int i = 0; i < open.size(); i++) {
+                    //cout << "  priority_new: " << priority << "\n" << endl;
 
-                        cout << "  priority: " << (*open[i]).getF() << endl;
-                        cout << "  Min in heap: " << (*open[i]).getX() << " " << (*open[i]).getY() << endl;
-                    }
-                    cout << endl;
+                    //cout << "  priority: " << (*open[i]).getF() << endl;
+                    //cout << "  Min in heap: " << (*open[i]).getX() << " " << (*open[i]).getY() << endl;
+
+                    //cout << endl;
                 }
             }
-
-            if (found == true) {
-
-                break;
-            }
         }
+
+        // Goal found, break while cicle
 
         if (found == true) {
 
             break;
         }
     }
-
-    int b = 0;
-
-    while ( current_x != start_pos.first and current_y != start_pos.second ) {
-
-        b++;
-
-        cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
-
-        current_x = cell_state[current_x][current_y].getParentX();
-        current_x = cell_state[current_x][current_y].getParentY();
-
-        if(b > 20)
-            break;
-    }
-
 }
 
 void ASearch::initCellState(int x_size, int y_size){
@@ -165,6 +171,32 @@ double ASearch::estimateH(Cell neighbour){
 
 
     return sqrt(diffx*diffx + diffy*diffy);
+}
+
+void ASearch::printPath(){
+
+    int next_x = cell_state[end_pos.first][end_pos.second].getX();
+    int next_y = cell_state[end_pos.first][end_pos.second].getY();
+
+    stack<pair<int, int> > path;
+
+    while ( next_x != -1 and next_y != -1 ) {
+
+        int current_x = next_x;
+        int current_y = next_y;
+
+        path.push(make_pair(current_x, current_y));
+
+        next_x = cell_state[current_x][current_y].getParentX();
+        next_y = cell_state[current_x][current_y].getParentY();
+    }
+
+    while ( !path.empty() ) {
+
+        pair<int, int> current = path.top();path.pop();
+
+        cout << "  x: " << current.first << ", y: " << current.second << "\n" << endl;
+    }
 }
 
 // Getters

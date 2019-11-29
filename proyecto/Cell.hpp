@@ -16,12 +16,6 @@ private:
     double g;
     double h;
 
-    struct PCompare {
-      bool operator()(const Cell* c1, const Cell* c2) {
-        return (*c1).f < (*c2).f;
-      }
-    };
-
 public:
 
     // Constructor
@@ -30,14 +24,11 @@ public:
 
     // Methods
 
-    bool operator<(const Cell& c) const
-    {
-        return this->f < c.f;
-    }
+    
 
     // Getters
 
-    double getF();
+    double getF() const;
 
     double getG();
 
