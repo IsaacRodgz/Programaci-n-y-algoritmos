@@ -37,6 +37,8 @@ void ASearch::search(vector<vector<int> > world){
     int current_x;
     int current_y;
 
+    bool found = false;
+
     while( !open.empty() ){
 
         // Remove item with lowest f value from open
@@ -50,22 +52,14 @@ void ASearch::search(vector<vector<int> > world){
 
         // Add current to closed set
 
-        //cout << "\nCurrent" << endl;
-        //cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
+        cout << "\nCurrent" << endl;
+        cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
 
         closed[current_x][current_y] = true;
 
-        // Check if current is the goal
-
-        if ( current_x == end_pos.first and current_y == end_pos.second ) {
-
-            cout << "\n Goal found\n" << endl;
-            break;
-        }
-
         // Iterate thorugh neighbours of current
 
-        //cout << "\nNeighbours:" << endl;
+        cout << "\nNeighbours:" << endl;
 
         for (int i = 0; i < x_neighbours.size(); i++) {
 
@@ -76,11 +70,22 @@ void ASearch::search(vector<vector<int> > world){
 
             if ( neigh_x >= 0 and neigh_x < world.size() and neigh_y >= 0 and neigh_y < world[0].size() and world[neigh_x][neigh_y] == 1 ) {
 
-                //cout << "\n Coords: " << neigh_x << " " << neigh_y << "\n" << endl;
+                // Check if current is the goal
+
+                if ( current_x == end_pos.first and current_y == end_pos.second ) {
+
+                    cell_state[neigh_x][neigh_y].setParent(current_x, current_y);
+
+                    cout << "\n Goal found\n" << endl;
+
+                    found = true;
+                }
 
                 double new_cost = (*current).getG() + 1.0;
 
                 if ( frontier[neigh_x][neigh_y] == false or new_cost < cell_state[neigh_x][neigh_y].getG()) {
+
+                    cout << "\n Coords: " << neigh_x << " " << neigh_y << "\n" << endl;
 
                     cell_state[neigh_x][neigh_y].setG(new_cost);
 
@@ -92,21 +97,48 @@ void ASearch::search(vector<vector<int> > world){
 
                     open.push_back(&cell_state[neigh_x][neigh_y]);
 
-                    make_heap(open.begin(), open.end());
+                    push_heap(open.begin(), open.end());
 
                     frontier[neigh_x][neigh_y] = true;
+
+                    cout << "  priority_new: " << priority << "\n" << endl;
+
+                    for (int i = 0; i < open.size(); i++) {
+
+                        cout << "  priority: " << (*open[i]).getF() << endl;
+                        cout << "  Min in heap: " << (*open[i]).getX() << " " << (*open[i]).getY() << endl;
+                    }
+                    cout << endl;
                 }
             }
+
+            if (found == true) {
+
+                break;
+            }
+        }
+
+        if (found == true) {
+
+            break;
         }
     }
 
+    int b = 0;
+
     while ( current_x != start_pos.first and current_y != start_pos.second ) {
+
+        b++;
 
         cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
 
         current_x = cell_state[current_x][current_y].getParentX();
         current_x = cell_state[current_x][current_y].getParentY();
+
+        if(b > 20)
+            break;
     }
+
 }
 
 void ASearch::initCellState(int x_size, int y_size){
@@ -128,9 +160,11 @@ void ASearch::initCellState(int x_size, int y_size){
 
 double ASearch::estimateH(Cell neighbour){
 
-    // Euclidean distance
+    double diffx = neighbour.getX() - end_pos.first;
+    double diffy = neighbour.getY() - end_pos.second;
 
-    return 0.0;
+
+    return sqrt(diffx*diffx + diffy*diffy);
 }
 
 // Getters
