@@ -15,6 +15,7 @@ private:
     vector<vector<bool> > closed;
     vector<vector<bool> > frontier;
     vector<vector<Cell> > cell_state;
+    vector<pair<int, int> > path;
 
     pair<int, int> start_pos;
     pair<int, int> end_pos;
@@ -42,7 +43,7 @@ public:
 
     // Getters
 
-
+    vector<pair<int, int> > getPath();
 
     // Setters
 

@@ -1,6 +1,6 @@
 all:
 
-	g++ -std=c++11 ASearch.cpp Cell.cpp test.cpp -o test
+	g++ -std=c++11 ASearch.cpp Cell.cpp Plot.cpp test.cpp -o test -lcairo
 
 clean:
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include<bits/stdc++.h>
 #include "ASearch.hpp"
+#include "Plot.hpp"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ void test_ASearch(){
     vector<vector<int> > world = {
 
         { 1, 0, 0, 0 },
-        { 1, 1, 3, 1 },
+        { 1, 1, 1, 1 },
         { 1, 0, 0, 1 },
         { 1, 1, 1, 1 },
     };
@@ -37,10 +38,12 @@ void test_ASearch(){
     ASearch aSearch(start_pos, end_pos);
 
     aSearch.search(world);
-
+    /*
     cout << "\n Solution: \n" << endl;
 
     aSearch.printPath();
+    */
+    Plot::plot(world, aSearch.getPath(), start_pos, end_pos);
 }
 
 int main(int argc, char const *argv[]) {

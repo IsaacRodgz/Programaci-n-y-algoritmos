@@ -145,6 +145,31 @@ void ASearch::search(vector<vector<int> > world){
             break;
         }
     }
+
+    // Recover path in order from beggining to end
+
+    int next_x = cell_state[end_pos.first][end_pos.second].getX();
+    int next_y = cell_state[end_pos.first][end_pos.second].getY();
+
+    stack<pair<int, int> > path_stack;
+
+    while ( next_x != -1 and next_y != -1 ) {
+
+        int current_x = next_x;
+        int current_y = next_y;
+
+        path_stack.push(make_pair(current_x, current_y));
+
+        next_x = cell_state[current_x][current_y].getParentX();
+        next_y = cell_state[current_x][current_y].getParentY();
+    }
+
+    while ( !path.empty() ) {
+
+        pair<int, int> current = path_stack.top();path_stack.pop();
+
+        path.push_back(current);
+    }
 }
 
 void ASearch::initCellState(int x_size, int y_size){
@@ -175,32 +200,17 @@ double ASearch::estimateH(Cell neighbour){
 
 void ASearch::printPath(){
 
-    int next_x = cell_state[end_pos.first][end_pos.second].getX();
-    int next_y = cell_state[end_pos.first][end_pos.second].getY();
+    for (int i = 0; i < path.size(); i++) {
 
-    stack<pair<int, int> > path;
-
-    while ( next_x != -1 and next_y != -1 ) {
-
-        int current_x = next_x;
-        int current_y = next_y;
-
-        path.push(make_pair(current_x, current_y));
-
-        next_x = cell_state[current_x][current_y].getParentX();
-        next_y = cell_state[current_x][current_y].getParentY();
-    }
-
-    while ( !path.empty() ) {
-
-        pair<int, int> current = path.top();path.pop();
-
-        cout << "  x: " << current.first << ", y: " << current.second << "\n" << endl;
+        cout << "  x: " << path[i].first << ", y: " << path[i].second << "\n" << endl;
     }
 }
 
 // Getters
 
+vector<pair<int, int> > ASearch::getPath(){
 
+    return path;
+}
 
 // Setters
