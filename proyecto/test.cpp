@@ -23,10 +23,10 @@ void test_ASearch(){
     };
     */
 
-    vector<vector<int> > world = {
+    vector<vector<double> > world = {
 
         { 1, 0, 0, 0 },
-        { 1, 1, 1, 1 },
+        { 1, 1, 2, 2.5 },
         { 1, 0, 0, 1 },
         { 1, 1, 1, 1 },
     };

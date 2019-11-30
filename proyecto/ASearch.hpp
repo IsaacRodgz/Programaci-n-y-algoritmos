@@ -31,9 +31,7 @@ public:
 
     // Methods
 
-    void search(vector<vector<int> > world);
-
-    void searchTemp(vector<vector<int> > world);
+    void search(vector<vector<double> > world);
 
     void initCellState(int x_size, int y_size);
 

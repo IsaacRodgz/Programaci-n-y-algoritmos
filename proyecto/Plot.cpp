@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void Plot::plot(vector<vector<int> > world, vector<pair<int, int> > path, pair<int, int> start_pos, pair<int, int> end_pos){
+void Plot::plot(vector<vector<double> > world, vector<pair<int, int> > path, pair<int, int> start_pos, pair<int, int> end_pos){
 
     int w = 600;
     int h = 600;
@@ -42,47 +42,8 @@ void Plot::plot(vector<vector<int> > world, vector<pair<int, int> > path, pair<i
     double origenx = w/8;
     double origeny = h - h/8;
 
-    cairo_set_source_rgb(cr, 0.4, 0.4, 0.4);
-    cairo_set_line_width(cr, 0.5);
-
-    //Grid x
-
-    // x axis
-    cairo_move_to(cr, origenx, origeny);
-    cairo_line_to(cr, ejex, origeny);
-    cairo_stroke(cr);
-
     double metrica_ejex = (ejex - origenx)/world[0].size();
     double metrica_ejey = (origeny - ejey)/world.size();
-
-    for (int i = 1; i < world[0].size()+1; i++) {
-
-        cairo_set_source_rgb(cr, 0.4, 0.4, 0.4);
-        cairo_set_line_width(cr, 1.0);
-
-        cairo_move_to(cr, (origenx+(metrica_ejex*i)), origeny);
-        cairo_line_to(cr, (origenx+(metrica_ejex*i)), ejey);
-
-        cairo_stroke(cr);
-    }
-
-    //Grid y
-
-    // y axis
-    cairo_move_to(cr, origenx, origeny);
-    cairo_line_to(cr, origenx, ejey);
-    cairo_stroke(cr);
-
-    for (int i = 1; i < world.size()+1; i++) {
-
-        cairo_set_source_rgb(cr, 0.4, 0.4, 0.4);
-        cairo_set_line_width(cr, 0.5);
-
-        cairo_move_to(cr, origenx, (ejey+(metrica_ejey*(i-1))));
-        cairo_line_to(cr, ejex, (ejey+(metrica_ejey*(i-1))));
-
-        cairo_stroke(cr);
-    }
 
     // Draw predator
 
@@ -116,32 +77,96 @@ void Plot::plot(vector<vector<int> > world, vector<pair<int, int> > path, pair<i
     cairo_surface_destroy (prey);
     cairo_restore(cr);
 
-    // Color cells
-    /*
+    // Color rest of the cells
+
     for (int i = 1; i < world.size()+1; i++) {
 
         for (int j = 0; j < world[0].size(); j++) {
 
-            double x_left = origenx + j*metrica_ejex;
-            double y_upper = origeny - i*metrica_ejey;
+            if ( (j != start_pos.first and (i-1) != start_pos.second) or (j != end_pos.first and (i-1) != end_pos.second) ) {
 
-            if ( world[j][world.size()-i] == 0 ) {
+                double x_left = origenx + j*metrica_ejex;
+                double y_upper = origeny - i*metrica_ejey;
 
-                cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
-                cairo_set_source_rgba(cr, 0, 0, 0, 0.5);
-                cairo_fill(cr);
+                if ( world[j][world.size()-i] == 0 ) {
+
+                    int w_water, h_water;
+                    cairo_surface_t *water;
+
+                    cairo_save(cr);
+                    water = cairo_image_surface_create_from_png ("water.png");
+                    w_water = cairo_image_surface_get_width (water);
+                    h_water = cairo_image_surface_get_height (water);
+                    cairo_translate (cr, origenx + j*metrica_ejex, origeny - i*metrica_ejey);
+                    cairo_scale  (cr, metrica_ejex/double(w_water), metrica_ejey/double(h_water));
+                    cairo_set_source_surface (cr, water, 0, 0);
+                    cairo_paint (cr);
+                    cairo_surface_destroy (water);
+                    cairo_restore(cr);
+                }
+
+                else if( world[j][world.size()-i] == 1 ) {
+
+                    cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
+                    cairo_set_source_rgba(cr, 0, 0.7, 0, 0.5);
+                    cairo_fill(cr);
+                }
+
+                else if( world[j][world.size()-i] == 2 ) {
+
+                    cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
+                    cairo_set_source_rgba(cr, 0.9, 0.3, 0.3, 0.5);
+                    cairo_fill(cr);
+                }
+
+                else if( world[j][world.size()-i] == 2.5 ) {
+
+                    cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
+                    cairo_set_source_rgba(cr, 0.6, 0.1, 0.1, 0.5);
+                    cairo_fill(cr);
+                }
             }
-
-            else if( world[j][world.size()-i] == 1 ) {
-
-                cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
-                cairo_set_source_rgba(cr, 0, 1, 0, 0.3);
-                cairo_fill(cr);
-            }
-
         }
     }
-    */
+
+    //Grid x
+
+    cairo_set_source_rgb(cr, 0, 0, 0);
+    cairo_set_line_width(cr, 1.0);
+
+    // x axis
+    cairo_move_to(cr, origenx, origeny);
+    cairo_line_to(cr, ejex, origeny);
+    cairo_stroke(cr);
+
+    for (int i = 1; i < world[0].size()+1; i++) {
+
+        cairo_set_source_rgb(cr, 0, 0, 0);
+        cairo_set_line_width(cr, 1.0);
+
+        cairo_move_to(cr, (origenx+(metrica_ejex*i)), origeny);
+        cairo_line_to(cr, (origenx+(metrica_ejex*i)), ejey);
+
+        cairo_stroke(cr);
+    }
+
+    //Grid y
+
+    // y axis
+    cairo_move_to(cr, origenx, origeny);
+    cairo_line_to(cr, origenx, ejey);
+    cairo_stroke(cr);
+
+    for (int i = 1; i < world.size()+1; i++) {
+
+        cairo_set_source_rgb(cr, 0, 0, 0);
+        cairo_set_line_width(cr, 1.0);
+
+        cairo_move_to(cr, origenx, (ejey+(metrica_ejey*(i-1))));
+        cairo_line_to(cr, ejex, (ejey+(metrica_ejey*(i-1))));
+
+        cairo_stroke(cr);
+    }
 
     cairo_surface_write_to_png(surface, "board.png");
     cairo_destroy(cr);

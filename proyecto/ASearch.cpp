@@ -20,7 +20,7 @@ ASearch::ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p) : start_p
 
 // Methods
 
-void ASearch::search(vector<vector<int> > world){
+void ASearch::search(vector<vector<double> > world){
 
     frontier.resize(world.size(), vector<bool>(world[0].size(), false));
     closed.resize(world.size(), vector<bool>(world[0].size(), false));
