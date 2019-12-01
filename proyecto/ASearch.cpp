@@ -97,9 +97,9 @@ void ASearch::search(vector<vector<double> > world){
 
                 double new_cost;
 
-                if ( neigh_x != current_x and neigh_y != neigh_y ) {
+                if ( neigh_x != current_x and neigh_y != current_y ) {
 
-                    new_cost = current.getG() + 1.0;
+                    new_cost = current.getG() + world[neigh_x][neigh_y];
                 }
 
                 // Else add penalization specific to neighbour cell
@@ -164,7 +164,7 @@ void ASearch::search(vector<vector<double> > world){
         next_y = cell_state[current_x][current_y].getParentY();
     }
 
-    while ( !path.empty() ) {
+    while ( !path_stack.empty() ) {
 
         pair<int, int> current = path_stack.top();path_stack.pop();
 
