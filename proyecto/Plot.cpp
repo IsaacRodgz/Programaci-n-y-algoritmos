@@ -45,7 +45,7 @@ void Plot::plot(){
 
     while (1) {
 
-        
+
     }
 }
 
@@ -60,7 +60,6 @@ void Plot::paint(){
     cairo_rectangle(cr, 0, 0, w, h);
     cairo_set_source(cr, pat);
     cairo_fill(cr);
-
 
     // Draw axis
 
@@ -79,6 +78,55 @@ void Plot::paint(){
 
     double metrica_ejex = (ejex - origenx)/world[0].size();
     double metrica_ejey = (origeny - ejey)/world.size();
+
+    // Color rest of the cells
+
+    for (int i = 1; i < world.size()+1; i++) {
+
+        for (int j = 0; j < world[0].size(); j++) {
+
+            double x_left = origenx + j*metrica_ejex;
+            double y_upper = origeny - i*metrica_ejey;
+
+            if ( world[j][world.size()-i] == 0 ) {
+
+                int w_water, h_water;
+                cairo_surface_t *water;
+
+                cairo_save(cr);
+                water = cairo_image_surface_create_from_png ("water.png");
+                w_water = cairo_image_surface_get_width (water);
+                h_water = cairo_image_surface_get_height (water);
+                cairo_translate (cr, origenx + j*metrica_ejex, origeny - i*metrica_ejey);
+                cairo_scale  (cr, metrica_ejex/double(w_water), metrica_ejey/double(h_water));
+                cairo_set_source_surface (cr, water, 0, 0);
+                cairo_paint (cr);
+                cairo_surface_destroy (water);
+                cairo_restore(cr);
+            }
+
+            else if( world[j][world.size()-i] == 1 ) {
+
+                cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
+                cairo_set_source_rgba(cr, 0, 0.7, 0, 0.5);
+                cairo_fill(cr);
+            }
+
+            else if( world[j][world.size()-i] == 2 ) {
+
+                cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
+                cairo_set_source_rgba(cr, 0.9, 0.3, 0.3, 0.5);
+                cairo_fill(cr);
+            }
+
+            else if( world[j][world.size()-i] == 2.5 ) {
+
+                cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
+                cairo_set_source_rgba(cr, 0.6, 0.1, 0.1, 0.5);
+                cairo_fill(cr);
+            }
+        }
+    }
 
     // Draw predator
 
@@ -112,57 +160,7 @@ void Plot::paint(){
     cairo_surface_destroy (prey);
     cairo_restore(cr);
 
-    // Color rest of the cells
-
-    for (int i = 1; i < world.size()+1; i++) {
-
-        for (int j = 0; j < world[0].size(); j++) {
-
-            if ( (j != start_pos.first and (i-1) != start_pos.second) or (j != end_pos.first and (i-1) != end_pos.second) ) {
-
-                double x_left = origenx + j*metrica_ejex;
-                double y_upper = origeny - i*metrica_ejey;
-
-                if ( world[j][world.size()-i] == 0 ) {
-
-                    int w_water, h_water;
-                    cairo_surface_t *water;
-
-                    cairo_save(cr);
-                    water = cairo_image_surface_create_from_png ("water.png");
-                    w_water = cairo_image_surface_get_width (water);
-                    h_water = cairo_image_surface_get_height (water);
-                    cairo_translate (cr, origenx + j*metrica_ejex, origeny - i*metrica_ejey);
-                    cairo_scale  (cr, metrica_ejex/double(w_water), metrica_ejey/double(h_water));
-                    cairo_set_source_surface (cr, water, 0, 0);
-                    cairo_paint (cr);
-                    cairo_surface_destroy (water);
-                    cairo_restore(cr);
-                }
-
-                else if( world[j][world.size()-i] == 1 ) {
-
-                    cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
-                    cairo_set_source_rgba(cr, 0, 0.7, 0, 0.5);
-                    cairo_fill(cr);
-                }
-
-                else if( world[j][world.size()-i] == 2 ) {
-
-                    cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
-                    cairo_set_source_rgba(cr, 0.9, 0.3, 0.3, 0.5);
-                    cairo_fill(cr);
-                }
-
-                else if( world[j][world.size()-i] == 2.5 ) {
-
-                    cairo_rectangle(cr, x_left, y_upper, metrica_ejex, metrica_ejey);
-                    cairo_set_source_rgba(cr, 0.6, 0.1, 0.1, 0.5);
-                    cairo_fill(cr);
-                }
-            }
-        }
-    }
+    // Draw solution
 
     for (int i = 0; i < path.size(); i++) {
 
@@ -250,6 +248,55 @@ void Plot::shapeit(){
     double metrica_ejex = (ejex - origenx)/world[0].size();
     double metrica_ejey = (origeny - ejey)/world.size();
 
+    // Color rest of the cells
+
+    for (int i = 1; i < world.size()+1; i++) {
+
+        for (int j = 0; j < world[0].size(); j++) {
+
+            double x_left = origenx + j*metrica_ejex;
+            double y_upper = origeny - i*metrica_ejey;
+
+            if ( world[j][world.size()-i] == 0 ) {
+
+                int w_water, h_water;
+                cairo_surface_t *water;
+
+                cairo_save(shape_cairo);
+                water = cairo_image_surface_create_from_png ("water.png");
+                w_water = cairo_image_surface_get_width (water);
+                h_water = cairo_image_surface_get_height (water);
+                cairo_translate (shape_cairo, origenx + j*metrica_ejex, origeny - i*metrica_ejey);
+                cairo_scale  (shape_cairo, metrica_ejex/double(w_water), metrica_ejey/double(h_water));
+                cairo_set_source_surface (shape_cairo, water, 0, 0);
+                cairo_paint (shape_cairo);
+                cairo_surface_destroy (water);
+                cairo_restore(shape_cairo);
+            }
+
+            else if( world[j][world.size()-i] == 1 ) {
+
+                cairo_rectangle(shape_cairo, x_left, y_upper, metrica_ejex, metrica_ejey);
+                cairo_set_source_rgba(shape_cairo, 0, 0.7, 0, 0.5);
+                cairo_fill(shape_cairo);
+            }
+
+            else if( world[j][world.size()-i] == 2 ) {
+
+                cairo_rectangle(shape_cairo, x_left, y_upper, metrica_ejex, metrica_ejey);
+                cairo_set_source_rgba(shape_cairo, 0.9, 0.3, 0.3, 0.5);
+                cairo_fill(shape_cairo);
+            }
+
+            else if( world[j][world.size()-i] == 2.5 ) {
+
+                cairo_rectangle(shape_cairo, x_left, y_upper, metrica_ejex, metrica_ejey);
+                cairo_set_source_rgba(shape_cairo, 0.6, 0.1, 0.1, 0.5);
+                cairo_fill(shape_cairo);
+            }
+        }
+    }
+
     // Draw predator
 
     int w_predator, h_predator;
@@ -282,57 +329,7 @@ void Plot::shapeit(){
     cairo_surface_destroy (prey);
     cairo_restore(shape_cairo);
 
-    // Color rest of the cells
-
-    for (int i = 1; i < world.size()+1; i++) {
-
-        for (int j = 0; j < world[0].size(); j++) {
-
-            if ( (j != start_pos.first and (i-1) != start_pos.second) or (j != end_pos.first and (i-1) != end_pos.second) ) {
-
-                double x_left = origenx + j*metrica_ejex;
-                double y_upper = origeny - i*metrica_ejey;
-
-                if ( world[j][world.size()-i] == 0 ) {
-
-                    int w_water, h_water;
-                    cairo_surface_t *water;
-
-                    cairo_save(shape_cairo);
-                    water = cairo_image_surface_create_from_png ("water.png");
-                    w_water = cairo_image_surface_get_width (water);
-                    h_water = cairo_image_surface_get_height (water);
-                    cairo_translate (shape_cairo, origenx + j*metrica_ejex, origeny - i*metrica_ejey);
-                    cairo_scale  (shape_cairo, metrica_ejex/double(w_water), metrica_ejey/double(h_water));
-                    cairo_set_source_surface (shape_cairo, water, 0, 0);
-                    cairo_paint (shape_cairo);
-                    cairo_surface_destroy (water);
-                    cairo_restore(shape_cairo);
-                }
-
-                else if( world[j][world.size()-i] == 1 ) {
-
-                    cairo_rectangle(shape_cairo, x_left, y_upper, metrica_ejex, metrica_ejey);
-                    cairo_set_source_rgba(shape_cairo, 0, 0.7, 0, 0.5);
-                    cairo_fill(shape_cairo);
-                }
-
-                else if( world[j][world.size()-i] == 2 ) {
-
-                    cairo_rectangle(shape_cairo, x_left, y_upper, metrica_ejex, metrica_ejey);
-                    cairo_set_source_rgba(shape_cairo, 0.9, 0.3, 0.3, 0.5);
-                    cairo_fill(shape_cairo);
-                }
-
-                else if( world[j][world.size()-i] == 2.5 ) {
-
-                    cairo_rectangle(shape_cairo, x_left, y_upper, metrica_ejex, metrica_ejey);
-                    cairo_set_source_rgba(shape_cairo, 0.6, 0.1, 0.1, 0.5);
-                    cairo_fill(shape_cairo);
-                }
-            }
-        }
-    }
+    // Draw solution
 
     for (int i = 0; i < path.size(); i++) {
 
