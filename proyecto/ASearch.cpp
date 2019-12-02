@@ -59,7 +59,15 @@ void ASearch::search(pair<int, int> start_pos, pair<int, int> end_pos){
         //cout << "\nCurrent" << endl;
         //cout << "\n Coords: " << current_x << " " << current_y << "\n" << endl;
 
-        closed[current_x][current_y] = true;
+        if ( closed[current_x][current_y] == true ) {
+
+            continue;
+        }
+
+        else {
+
+            closed[current_x][current_y] == true;
+        }
 
         // Iterate thorugh neighbours of current
 
@@ -72,7 +80,7 @@ void ASearch::search(pair<int, int> start_pos, pair<int, int> end_pos){
 
             // Check if neighbour is valid
 
-            if ( neigh_x >= 0 and neigh_x < world.size() and neigh_y >= 0 and neigh_y < world[0].size() and world[neigh_x][neigh_y] != 0 ) {
+            if ( neigh_x >= 0 and neigh_x < world.size() and neigh_y >= 0 and neigh_y < world[0].size() and world[neigh_x][neigh_y] != 0 and closed[current_x][current_y] == false ) {
 
                 // Check if current is the goal
 
