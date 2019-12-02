@@ -12,7 +12,7 @@ bool operator<(const Cell& c1, const Cell& c2) {
 
 // Constructor
 
-ASearch::ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p) : start_pos(start_pos_p), end_pos(end_pos_p) {
+ASearch::ASearch(vector<vector<double> > world_p) : world(world_p) {
 
     x_neighbours = { -1, 0, 1, -1, 1, -1, 0, 1 };
     y_neighbours = { -1, -1, -1, 0, 0, 1, 1, 1 };
@@ -20,7 +20,9 @@ ASearch::ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p) : start_p
 
 // Methods
 
-void ASearch::search(vector<vector<double> > world){
+void ASearch::search(pair<int, int> start_pos, pair<int, int> end_pos){
+
+    reset();
 
     frontier.resize(world.size(), vector<bool>(world[0].size(), false));
     closed.resize(world.size(), vector<bool>(world[0].size(), false));
@@ -115,7 +117,7 @@ void ASearch::search(vector<vector<double> > world){
 
                     cell_state[neigh_x][neigh_y].setG(new_cost);
 
-                    double priority = new_cost + estimateH(cell_state[neigh_x][neigh_y]);
+                    double priority = new_cost + estimateH(cell_state[neigh_x][neigh_y], end_pos);
 
                     cell_state[neigh_x][neigh_y].setParent(current_x, current_y);
 
@@ -189,7 +191,7 @@ void ASearch::initCellState(int x_size, int y_size){
     }
 }
 
-double ASearch::estimateH(Cell neighbour){
+double ASearch::estimateH(Cell neighbour, pair<int, int> end_pos){
 
     double diffx = neighbour.getX() - end_pos.first;
     double diffy = neighbour.getY() - end_pos.second;
@@ -202,7 +204,20 @@ void ASearch::printPath(){
 
     for (int i = 0; i < path.size(); i++) {
 
-        cout << "  x: " << path[i].first << ", y: " << path[i].second << "\n" << endl;
+        cout << "  x: " << path[i].second << ", y: " << path[i].first << "\n" << endl;
+    }
+}
+
+void ASearch::reset(){
+
+    frontier.clear();
+    closed.clear();
+    cell_state.clear();
+    path.clear();
+
+    while (!openList.empty()){
+
+        openList.pop();
     }
 }
 
@@ -211,6 +226,11 @@ void ASearch::printPath(){
 vector<pair<int, int> > ASearch::getPath(){
 
     return path;
+}
+
+vector<vector<double> > ASearch::getWorld(){
+
+    return world;
 }
 
 // Setters

@@ -1,12 +1,14 @@
 #ifndef PLOT_HPP
 #define PLOT_HPP
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+
 #include <stdio.h>
-#include <X11/extensions/shape.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -17,27 +19,23 @@ private:
     int w;
     int h;
 
-    cairo_surface_t *surface;
+    cairo_surface_t *sfc;
     cairo_t *cr;
-    Display *dpy;
     cairo_surface_t *shape_surface;
     cairo_t *shape_cairo;
     Pixmap shape;
 
-    vector<vector<double> > world;
-    vector<pair<int, int> > path;
-    pair<int, int> start_pos;
-    pair<int, int> end_pos;
-
 public:
 
-    Plot(vector<vector<double> > world_p, vector<pair<int, int> > path_p, pair<int, int> start_pos_p, pair<int, int> end_pos_p);
+    Plot(int width_p, int height_p);
 
-    void plot();
+    void cairo_create_x11_surface();
 
-    void paint();
+    int checkEvent(int block);
 
-    void shapeit();
+    void close();
+
+    void paint(pair<int, int> start_pos, pair<int, int> end_pos, vector<pair<int, int> > path, vector<vector<double> > world);
 
 };
 

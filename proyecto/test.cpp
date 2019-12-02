@@ -1,11 +1,18 @@
 #include <iostream>
 #include<bits/stdc++.h>
+#include "Program.hpp"
 #include "ASearch.hpp"
 #include "Plot.hpp"
 #include <random>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <cairo.h>
+#include <cairo-xlib.h>
 
 using namespace std;
 
+// g++ -std=c++11 ASearch.cpp Cell.cpp Plot.cpp test.cpp -o test -lcairo $(pkg-config xext x11 cairo-xlib-xrender --cflags --libs) && ./test
 
 void test_ASearch(){
 
@@ -34,6 +41,7 @@ void test_ASearch(){
     };
     */
 
+    /*
     vector<vector<double> > world = {
 
         { 1, 0, 0, 1, 0 },
@@ -41,6 +49,18 @@ void test_ASearch(){
         { 1, 0, 0, 1, 1 },
         { 2.5, 1, 1, 1, 1 },
         { 1, 1, 2, 1, 1 }
+    };
+    */
+
+    /*
+    vector<vector<double> > world = {
+
+        { 1, 0, 0, 1, 0, 2 },
+        { 1, 1, 2, 2.5, 1, 1 },
+        { 1, 0, 0, 1, 1, 1 },
+        { 2.5, 1, 1, 0, 2.5, 1 },
+        { 1, 0, 2, 1, 2, 0 },
+        { 1, 1, 2, 1, 1, 1 }
     };
 
     vector<pair<int, int> > available;
@@ -82,8 +102,8 @@ void test_ASearch(){
 
     // Search for best path
 
-    cout << "\nInitial position: " << start_pos.first << " , " << start_pos.second << endl;
-    cout << "\nFinal position: " << end_pos.first << " , " << end_pos.second << endl;
+    cout << "\nInitial position: " << start_pos.second << " , " << start_pos.first << endl;
+    cout << "\nFinal position: " << end_pos.second << " , " << end_pos.first << endl;
 
     ASearch aSearch(start_pos, end_pos);
 
@@ -97,10 +117,23 @@ void test_ASearch(){
 
     Plot p = Plot(world, aSearch.getPath(), start_pos, end_pos);
     p.plot();
-
+    */
 }
 
 int main(int argc, char const *argv[]) {
 
-    test_ASearch();
+    vector<vector<double> > world = {
+
+        { 1, 0, 0, 1, 0, 2 },
+        { 1, 1, 2, 2.5, 1, 1 },
+        { 1, 0, 0, 1, 1, 1 },
+        { 2.5, 1, 1, 0, 2.5, 1 },
+        { 1, 0, 2, 1, 2, 0 },
+        { 1, 1, 2, 1, 1, 1 }
+    };
+
+    Program p = Program(600, 600, world);
+    p.run();
+
+    return 0;
 }

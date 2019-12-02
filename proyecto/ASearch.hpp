@@ -16,9 +16,7 @@ private:
     vector<vector<bool> > frontier;
     vector<vector<Cell> > cell_state;
     vector<pair<int, int> > path;
-
-    pair<int, int> start_pos;
-    pair<int, int> end_pos;
+    vector<vector<double> > world;
 
     vector<int> x_neighbours;
     vector<int> y_neighbours;
@@ -27,21 +25,25 @@ public:
 
     // Constructor
 
-    ASearch(pair<int, int> start_pos_p, pair<int, int> end_pos_p);
+    ASearch(vector<vector<double> > world_p);
 
     // Methods
 
-    void search(vector<vector<double> > world);
+    void search(pair<int, int> start_pos, pair<int, int> end_pos);
 
     void initCellState(int x_size, int y_size);
 
-    double estimateH(Cell neighbour);
+    double estimateH(Cell neighbour, pair<int, int> end_pos);
 
     void printPath();
+
+    void reset();
 
     // Getters
 
     vector<pair<int, int> > getPath();
+
+    vector<vector<double> > getWorld();
 
     // Setters
 
