@@ -38,10 +38,10 @@ void Program::run(){
         up: 65362
         down: 65364
 
-        left-up:
-        right-up:
-        left-down:
-        right-down: 
+        left-up: 113
+        right-up: 119
+        left-down: 97
+        right-down: 115
     */
 
     while(1){
@@ -49,8 +49,6 @@ void Program::run(){
         int key;
 
         key = plot.checkEvent(1);
-
-        cout << "\n Key: " << key << endl;
 
         if ( key == 65361 ) {
 
@@ -132,10 +130,96 @@ void Program::run(){
             }
         }
 
+        else if ( key == 113 ) {
+
+            if ( validateMove(-1, -1) ) {
+
+                cout << "Left-Up\n" << endl;
+
+                end_pos.first = end_pos.first-1;
+                end_pos.second = end_pos.second-1;
+
+                aSearch.search(start_pos, end_pos);
+
+                cout << "\n New path\n" << endl;
+
+                aSearch.printPath();
+
+                path = aSearch.getPath();
+
+                plot.paint(start_pos, end_pos, path, aSearch.getWorld());
+            }
+        }
+
+        else if ( key == 119 ) {
+
+            if ( validateMove(1, -1) ) {
+
+                cout << "Right-Up\n" << endl;
+
+                end_pos.first = end_pos.first+1;
+                end_pos.second = end_pos.second-1;
+
+                aSearch.search(start_pos, end_pos);
+
+                cout << "\n New path\n" << endl;
+
+                aSearch.printPath();
+
+                path = aSearch.getPath();
+
+                plot.paint(start_pos, end_pos, path, aSearch.getWorld());
+            }
+        }
+
+        else if ( key == 97 ) {
+
+            if ( validateMove(-1, 1) ) {
+
+                cout << "Left-Down\n" << endl;
+
+                end_pos.first = end_pos.first-1;
+                end_pos.second = end_pos.second+1;
+
+                aSearch.search(start_pos, end_pos);
+
+                cout << "\n New path\n" << endl;
+
+                aSearch.printPath();
+
+                path = aSearch.getPath();
+
+                plot.paint(start_pos, end_pos, path, aSearch.getWorld());
+            }
+        }
+
+        else if ( key == 115 ) {
+
+            if ( validateMove(1, 1) ) {
+
+                cout << "Right-Down\n" << endl;
+
+                end_pos.first = end_pos.first+1;
+                end_pos.second = end_pos.second+1;
+
+                aSearch.search(start_pos, end_pos);
+
+                cout << "\n New path\n" << endl;
+
+                aSearch.printPath();
+
+                path = aSearch.getPath();
+
+                plot.paint(start_pos, end_pos, path, aSearch.getWorld());
+            }
+        }
+
         else if ( key == 65307 ) {
 
             exit(1);
         }
+
+        cout << "\n\n---------------------------------------------------------------\n\n";
     }
 
     plot.close();
@@ -147,7 +231,7 @@ void Program::initialize(vector<vector<double> > world){
 
         for (int j = 0; j < world[0].size(); j++) {
 
-            if ( world[i][j] == 1 ) {
+            if ( world[i][j] != 0 ) {
 
                 available.push_back(make_pair(i, j));
             }

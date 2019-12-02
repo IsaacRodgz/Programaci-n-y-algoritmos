@@ -33,7 +33,9 @@ public:
 
     void initCellState(int x_size, int y_size);
 
-    double estimateH(Cell neighbour, pair<int, int> end_pos);
+    double estimateHEuclidean(Cell neighbour, pair<int, int> end_pos);
+
+    double estimateHDiagonal(Cell neighbour, pair<int, int> end_pos);
 
     void printPath();
 

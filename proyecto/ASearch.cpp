@@ -117,7 +117,7 @@ void ASearch::search(pair<int, int> start_pos, pair<int, int> end_pos){
 
                     cell_state[neigh_x][neigh_y].setG(new_cost);
 
-                    double priority = new_cost + estimateH(cell_state[neigh_x][neigh_y], end_pos);
+                    double priority = new_cost + estimateHDiagonal(cell_state[neigh_x][neigh_y], end_pos);
 
                     cell_state[neigh_x][neigh_y].setParent(current_x, current_y);
 
@@ -191,13 +191,22 @@ void ASearch::initCellState(int x_size, int y_size){
     }
 }
 
-double ASearch::estimateH(Cell neighbour, pair<int, int> end_pos){
+double ASearch::estimateHEuclidean(Cell neighbour, pair<int, int> end_pos){
 
     double diffx = neighbour.getX() - end_pos.first;
     double diffy = neighbour.getY() - end_pos.second;
 
 
     return sqrt(diffx*diffx + diffy*diffy);
+}
+
+double ASearch::estimateHDiagonal(Cell neighbour, pair<int, int> end_pos){
+
+    double diffx = fabs(neighbour.getX() - end_pos.first);
+    double diffy = fabs(neighbour.getY() - end_pos.second);
+
+
+    return max(diffx, diffy);
 }
 
 void ASearch::printPath(){
